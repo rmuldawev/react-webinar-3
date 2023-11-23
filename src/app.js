@@ -10,6 +10,7 @@ import './styles.css';
 function App({store}) {
 
   const list = store.getState().list;
+  console.log(list)
 
   return (
     <div className='App'>
@@ -21,12 +22,18 @@ function App({store}) {
       </div>
       <div className='App-center'>
         <div className='List'>{
-          list.map(item =>
+         list.map(item =>
             <div key={item.code} className='List-item'>
               <div className={'Item' + (item.selected ? ' Item_selected' : '')}
                    onClick={() => store.selectItem(item.code)}>
                 <div className='Item-code'>{item.code}</div>
+                <div style={{display:'flex', flexDirection:'row',justifyContent:'space-between',width:'100%'}}>
+
                 <div className='Item-title'>{item.title}</div>
+                <div className='Item-selection-count'>
+                    {item.selectionCount > 0 && `Выделяли ${Number(item.selectionCount)} раз`}
+                  </div>
+                  </div>
                 <div className='Item-actions'>
                   <button onClick={() => store.deleteItem(item.code)}>
                     Удалить
