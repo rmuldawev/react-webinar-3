@@ -50,8 +50,10 @@ body {
 }
 
 .Item-title {
+  display: flex;
   width: 100%;
   padding: 20px 10px;
+  flex-direction: row;
 }
 
 .Item-actions {
@@ -61,6 +63,6 @@ body {
 }
 
 .Item-selection-count {
-  display: flex;
+  margin-left: 2px;
   justify-content: flex-start;
 }

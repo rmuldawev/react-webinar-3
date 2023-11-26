@@ -88,14 +88,15 @@ class Store {
     const selectState = this.state.list.map((item) => {
       if (item.code === code) {
         item.selected = !item.selected;
-        item.selectionCount += 1
+        if (item.selected) {
+          item.selectionCount += 1;
+        }
       } else {
         item.selected = false;
       }
-      console.log("item",item.selectionCount)
       return item;
     });
-
+  
     this.setState({
       ...this.state,
       list: selectState,

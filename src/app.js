@@ -10,7 +10,21 @@ import './styles.css';
 function App({store}) {
 
   const list = store.getState().list;
-  console.log(list)
+
+const getSelectionCountText = (count) => {
+    if (count === 0) {
+      return 'раз';
+    }
+    const lastDigit = count % 10;
+    const lastTwoDigits = count % 100;
+    if (lastDigit === 1 && lastTwoDigits !== 11) {
+      return 'раз';
+    } else if ([2, 3, 4].includes(lastDigit) && ![12, 13, 14].includes(lastTwoDigits)) {
+      return 'раза';
+    } else {
+      return 'раз';
+    }
+  }
 
   return (
     <div className='App'>
@@ -27,13 +41,11 @@ function App({store}) {
               <div className={'Item' + (item.selected ? ' Item_selected' : '')}
                    onClick={() => store.selectItem(item.code)}>
                 <div className='Item-code'>{item.code}</div>
-                <div style={{display:'flex', flexDirection:'row',justifyContent:'space-between',width:'100%'}}>
-
-                <div className='Item-title'>{item.title}</div>
+                <div className='Item-title'>{item.title}
                 <div className='Item-selection-count'>
-                    {item.selectionCount > 0 && `Выделяли ${Number(item.selectionCount)} раз`}
-                  </div>
-                  </div>
+                  {item.selectionCount > 0 && `| Выделяли  ${Number(item.selectionCount)} ${getSelectionCountText(Number(item.selectionCount))}`}
+                </div>
+                </div>
                 <div className='Item-actions'>
                   <button onClick={() => store.deleteItem(item.code)}>
                     Удалить
