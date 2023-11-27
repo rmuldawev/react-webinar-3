@@ -61,9 +61,10 @@ class Store {
 
   addItem() {
     const newCode = this.generateUniqueCode();
+    const newItem = { code: newCode, title: "Новая запись", selectionCount: 0 };
     this.setState({
       ...this.state,
-      list: [...this.state.list, { code: newCode, title: "Новая запись" }],
+      list: [...this.state.list, newItem],
     });
     this.usedCodes.add(newCode);
   }
