@@ -2,4 +2,27 @@
   display: flex;
   justify-content: flex-end;
   padding: 20px;
+  align-items: center;
+}
+
+.totalPrice {
+  margin-left: 15px;
+  margin-right: 20px;
+
+  display: flex;
+  font-weight: 700;
+gap: 5px;
+  flex-direction: row;
+}
+
+
+.symbolR {
+  font-weight: 700;
+  align-self: center;
+  margin-left: 5px;
+
+}
+
+.buttonStyle {
+  height: 21px;
 }

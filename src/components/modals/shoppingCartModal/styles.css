@@ -1,0 +1,71 @@
+.container {
+  width: 960px;
+  height: 407px;
+  flex-shrink: 0;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar {
+    width: 0;  /* Ширина индикатора прокрутки */
+  }
+
+.Modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.titleHead {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: #F5F5F5;
+    padding-left: 20px;
+    padding-right: 32px;
+  border-radius: 10px 10px 0 0;
+  align-items: center;
+
+}
+
+.headButton {
+    height: 21px;
+}
+
+.cartItems {
+    display: flex;
+    height: 188px;
+    border-top: 1px dashed #ccc;
+
+    flex-direction: column;
+    overflow-y: scroll;
+
+}
+.cartItemStyle {
+    border-bottom: 1px dashed #ccc;
+
+}
+
+.totalAmount {
+    display: flex;
+    flex-direction: row;
+    gap: 53px;
+    justify-content: flex-end;
+    font-size: 18px;
+    font-weight: 700;
+    padding-right: 50px;
+    font-family: Arial;
+}
+
+.symbol {
+    font-weight: 700;
+    font-size: 18px;
+    font-family: Arial;
+
+}
+
+.noItems {
+  align-self: center;
+}

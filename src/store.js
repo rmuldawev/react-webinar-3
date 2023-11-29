@@ -5,7 +5,11 @@ import {generateCode} from "./utils";
  */
 class Store {
   constructor(initState = {}) {
-    this.state = initState;
+    this.state = {
+      list: [],
+      cart: [], // New property for the shopping cart
+      ...initState,
+    };
     this.listeners = []; // Слушатели изменений состояния
   }
 
@@ -40,48 +44,37 @@ class Store {
     for (const listener of this.listeners) listener();
   }
 
-  /**
-   * Добавление новой записи
-   */
-  addItem() {
-    this.setState({
-      ...this.state,
-      list: [...this.state.list, {code: generateCode(), title: 'Новая запись'}]
-    })
-  };
 
-  /**
-   * Удаление записи по коду
-   * @param code
-   */
-  deleteItem(code) {
-    this.setState({
-      ...this.state,
-      // Новый список, в котором не будет удаляемой записи
-      list: this.state.list.filter(item => item.code !== code)
-    })
-  };
+  addToCart(code, count) {
+    const { cart, list } = this.state;
+    const existingItem = cart.find(item => item.code === code);
+  
+    if (existingItem) {
+      const updatedCart = cart.map(item =>
+        item.code === code ? { ...item, count: item.count + count } : item
+      );
+  
+      this.setState({
+        ...this.state,
+        cart: updatedCart,
+      });
+    } else {
+      const selectedItem = list.find((item) => item.code === code);
+      if (selectedItem) {
+        this.setState({
+          ...this.state,
+          cart: [...cart, { ...selectedItem, count }],
+        });
+      }
+    }
+  }
 
-  /**
-   * Выделение записи по коду
-   * @param code
-   */
-  selectItem(code) {
+  removeFromCart(code) {
+    const updatedCart = this.state.cart.filter((item) => item.code !== code);
     this.setState({
       ...this.state,
-      list: this.state.list.map(item => {
-        if (item.code === code) {
-          // Смена выделения и подсчёт
-          return {
-            ...item,
-            selected: !item.selected,
-            count: item.selected ? item.count : item.count + 1 || 1,
-          };
-        }
-        // Сброс выделения если выделена
-        return item.selected ? {...item, selected: false} : item;
-      })
-    })
+      cart: updatedCart,
+    });
   }
 }
 

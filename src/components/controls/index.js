@@ -1,11 +1,24 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import './style.css';
+import { plural } from "../../utils";
 
-function Controls({onAdd}) {
+function Controls({onAdd,items,totalPrice}) {
   return (
     <div className='Controls'>
-      <button onClick={() => onAdd()}>Добавить</button>
+      <p>В корзине:</p>
+      <div className="totalPrice"> 
+      <p>
+         {items.length > 0  ? `  ${items.length} ${plural(items.length, {
+        one: 'товар',
+        few: 'товара',
+        many: 'товаров'
+      })} / ${totalPrice.toLocaleString('ru-RU')}`: 'пусто'}
+      </p>
+       {items.length > 0  ?<p>₽</p> : ''}
+      </div>
+
+      <button className="buttonStyle" onClick={() => onAdd()}>Перейти</button>
     </div>
   )
 }
