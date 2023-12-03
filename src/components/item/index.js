@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+//styles
 import "./style.css";
 
 function Item(props) {

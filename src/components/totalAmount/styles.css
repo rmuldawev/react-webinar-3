@@ -1,0 +1,16 @@
+.totalAmount {
+    display: flex;
+    flex-direction: row;
+    gap: 53px;
+    justify-content: flex-end;
+    font-size: 18px;
+    font-weight: 700;
+    padding-right: 50px;
+    font-family: Arial;
+  }
+  
+  .symbol {
+    font-weight: 700;
+    font-size: 18px;
+    font-family: Arial;
+  }
