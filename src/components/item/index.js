@@ -43,7 +43,6 @@ Item.propTypes = {
   isInCartPage: PropTypes.bool,
   onAddToCart: PropTypes.func,
   onRemoveFromCart: PropTypes.func,
-  countInCart: PropTypes.number,
 };
 
 Item.defaultProps = {

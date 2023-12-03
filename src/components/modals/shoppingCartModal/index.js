@@ -1,12 +1,12 @@
 import React from "react";
 import Modal from "react-modal";
+import PropTypes from "prop-types"
 //components
 import Item from "../../item";
 import CartHeader from "../../cartHeader";
 import TotalAmount from "../../totalAmount";
 //styles
 import "../shoppingCartModal/styles.css";
-
 
 const ShoppingCartModal = ({
   isOpen,
@@ -15,6 +15,7 @@ const ShoppingCartModal = ({
   onRemoveFromCart,
   onTotalPriceChange,
 }) => {
+  
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.count * item.price,
     0
@@ -51,6 +52,14 @@ const ShoppingCartModal = ({
       </div>
     </Modal>
   );
+};
+
+ShoppingCartModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  cartItems: PropTypes.array.isRequired,
+  onRemoveFromCart: PropTypes.func.isRequired,
+  onTotalPriceChange: PropTypes.func.isRequired,
 };
 
 export default ShoppingCartModal;

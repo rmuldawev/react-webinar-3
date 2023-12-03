@@ -27,7 +27,6 @@ function App({ store }) {
     ),
     onRemoveFromCart: useCallback(
       (code) => {
-        console.log('deleted')
         store.removeFromCart(code);
       },
       [store]
