@@ -25,3 +25,4 @@ class Catalog extends StoreModule {
 }
 
 export default Catalog;
+

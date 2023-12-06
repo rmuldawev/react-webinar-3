@@ -20,6 +20,7 @@ function Main() {
     amount: state.basket.amount,
     sum: state.basket.sum
   }));
+  console.log('select.list',select.list)
 
   const callbacks = {
     // Добавление в корзину
@@ -46,3 +47,4 @@ function Main() {
 }
 
 export default memo(Main);
+

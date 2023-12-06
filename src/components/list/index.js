@@ -1,15 +1,21 @@
 import {memo} from "react";
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Item from "../item";
 import './style.css';
 
 function List({list, renderItem}) {
+
+  
   return (
     <div className='List'>{
       list.map(item =>
-        <div key={item._id} className='List-item'>
+        <Link to={`/aboutProduct/${item._id}`} style={{ textDecoration: 'none', color: 'inherit' }} key={item._id}>
+        <div className='List-item'>
           {renderItem(item)}
         </div>
+        </Link>
+
       )}
     </div>
   )
