@@ -33,3 +33,38 @@ export function codeGenerator(start = 0) {
 export function numberFormat(value, locale = 'ru-RU', options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
+
+export function getPagination(options) {
+  const { length, totalCount, currentPage } = options;
+
+  const numberOfPages = Math.ceil(totalCount / length);
+
+  if (currentPage > numberOfPages || currentPage < 1) {
+    throw Error("Wrong current page", currentPage);
+  }
+
+  if (numberOfPages <= 5) {
+    return Array.from({ length: numberOfPages }, (_, i) => i + 1);
+  }
+
+  const pages = [1, 2, 3];
+
+  if (currentPage > 3) {
+    pages.push("...");
+  }
+
+  if (currentPage <= numberOfPages - 2) {
+    pages.push(currentPage - 1, currentPage, currentPage + 1);
+  } else {
+    pages.push(numberOfPages - 2, numberOfPages - 1, numberOfPages);
+  }
+
+  if (currentPage < numberOfPages - 2) {
+    pages.push("...");
+  }
+
+  pages.push(numberOfPages);
+
+  return pages;
+}
+

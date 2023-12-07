@@ -10,7 +10,7 @@ function ItemBasket(props) {
   const cn = bem('ItemBasket');
 
   const callbacks = {
-    onRemove: (e) => props.onRemove(props.item._id)
+    onRemove: (e) => props.onRemove(props.item._id),
   };
 
   return (
@@ -36,10 +36,12 @@ ItemBasket.propTypes = {
     amount: PropTypes.number
   }).isRequired,
   onRemove: propTypes.func,
+  closeModal: propTypes.func
 }
 
 ItemBasket.defaultProps = {
   onRemove: () => {},
+  onclose: () => {}
 }
 
 export default memo(ItemBasket);

@@ -34,7 +34,7 @@ function ModalLayout(props) {
           <h1 className={cn('title')}>{props.title}</h1>
           <button className={cn('close')} onClick={props.onClose}>Закрыть</button>
         </div>
-        <div className={cn('content')}>
+        <div className={cn('content')} onClick={props.onClose}>
           {props.children}
         </div>
       </div>

@@ -8,6 +8,8 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import '../main/styles.css'
 
+
+
 function Main() {
   const store = useStore();
 
@@ -29,7 +31,11 @@ function Main() {
     list: state.catalog.list,
     amount: state.basket.amount,
     sum: state.basket.sum,
+    // lang: state.isLanguage.isLanguage
+    lang: state.isLanguage.isLanguage,
   }));
+
+  console.log('select.lang',select.lang)
 
   const callbacks = {
     addToBasket: useCallback(
@@ -40,7 +46,19 @@ function Main() {
       () => store.actions.modals.open("basket"),
       [store]
     ),
+    closeModal:  useCallback(
+      () => store.actions.modals.close("basket"),
+      [store]
+    ),
+    toggleLanguage: useCallback (
+      () =>  store.actions.isLanguage.toggleLanguage(), [store]
+    )
+
   };
+
+  // const toggleLanguage = useCallback(() => {
+  //   store.actions.isLanguage.toggleLanguage();
+  // }, [store]);
 
   const renders = {
     item: useCallback(
@@ -56,6 +74,7 @@ function Main() {
     const currentPage = Math.ceil((pagination.skip + 1) / pagination.limit);
   
     const pages = [];
+    console.log(totalPages)
   
     for (let i = 1; i <= totalPages; i++) {
       const isCurrentPage = i === currentPage;
@@ -66,7 +85,6 @@ function Main() {
         (i >= currentPage - 1 && i <= currentPage + 1)
       ) {
     
-  
         pages.push(
           <button
             key={i}
@@ -85,15 +103,23 @@ function Main() {
   };
 
   
+  
+  
+  
+
+
+  
   return (
     <PageLayout>
-      <Head title="Магазин" />
+      <Head onCLick={callbacks.toggleLanguage} key={select.lang} state={select.lang}/>
       <BasketTool
+      
+        state={select.lang }
         onOpen={callbacks.openModalBasket}
         amount={select.amount}
         sum={select.sum}
       />
-      <List list={select.list} renderItem={renders.item} />
+      <List list={select.list} renderItem={renders.item}  />
 
       <div style={{ display: "flex", justifyContent: "flex-end",marginTop:'22px',marginRight:'21px'}}>
         {renderPagination()}
