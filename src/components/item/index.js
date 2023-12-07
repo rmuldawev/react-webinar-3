@@ -6,11 +6,8 @@ import './style.css';
 
 function Item(props) {
 
-  const cn = bem('Item');
 
-  // const callbacks = {
-  //   onAdd: (e) => props.onAdd(props.item._id)
-  // }
+  const cn = bem('Item');
 
   const callbacks = {
     onAdd: (e) => {
@@ -21,13 +18,12 @@ function Item(props) {
 
   return (
     <div className={cn()}>
-      {/*<div className={cn('code')}>{props.item._id}</div>*/}
       <div className={cn('title')}>
         {props.item.title}
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} ₽</div>
-        <button onClick={callbacks.onAdd}>Добавить</button>
+        <button onClick={callbacks.onAdd}>{props.lang ? "Add" : "Добавить"}</button>
       </div>
     </div>
   );
@@ -37,7 +33,8 @@ Item.propTypes = {
   item: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
-    price: PropTypes.number
+    price: PropTypes.number,
+    lang: PropTypes.bool
   }).isRequired,
   onAdd: PropTypes.func,
 };
