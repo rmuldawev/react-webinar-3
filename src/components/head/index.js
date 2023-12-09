@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import './style.css';
 
 function Head({onCLick, state,type,title}) {
-  console.log('state',state)
   return (
     <div className='Head'>
       {type !== 'aboutProduct' ? <h1>{state === true ? "Store" : " Магазин"}</h1> : <h1>{title}</h1>}

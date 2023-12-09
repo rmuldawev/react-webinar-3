@@ -37,7 +37,7 @@ AboutProductContainer.propTypes = {
     country: PropTypes.string.isRequired,
     code: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
+    year: PropTypes.node.isRequired,
     price: PropTypes.number.isRequired,
   };
 
