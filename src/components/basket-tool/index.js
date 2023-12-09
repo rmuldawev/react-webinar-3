@@ -3,11 +3,9 @@ import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import { numberFormat, plural } from "../../utils";
 import "./style.css";
-import { Link } from "react-router-dom";
 import NavBar from "../navBar";
 
 function BasketTool({ sum, amount, onOpen, lang }) {
-  console.log("lang", lang);
   const cn = bem("BasketTool");
   return (
     <div className={cn()}>
@@ -27,7 +25,7 @@ function BasketTool({ sum, amount, onOpen, lang }) {
             ? "empty"
             : `пусто`}
         </span>
-        <button onClick={onOpen}>{lang ? "Cross" : "Перейти"}</button>
+        <button  className="buttonStyle" onClick={onOpen}>{lang ? "Cross" : "Перейти"}</button>
       </div>
     </div>
   );

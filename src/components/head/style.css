@@ -19,6 +19,7 @@
   height: 30px;
   border-radius: 20px;
   color: red;
+  cursor: pointer;
 
 }
 
@@ -26,6 +27,4 @@
   background: white;
   border: 1px solid black;
   border-radius: 20px;
-  
-
 }

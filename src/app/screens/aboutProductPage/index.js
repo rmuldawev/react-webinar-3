@@ -73,6 +73,7 @@ const AboutProductPage = () => {
             price={select.aboutProduct.price}
           />
           <button
+           style={{cursor:'pointer'}}
             onClick={() => callbacks.addToBasket(select.aboutProduct?._id)}
           >
             {select.lang ? "Add to Basket" : "Добавить"}
