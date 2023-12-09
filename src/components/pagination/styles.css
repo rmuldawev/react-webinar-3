@@ -1,0 +1,5 @@
+.container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 22px 21px 0 0;
+}

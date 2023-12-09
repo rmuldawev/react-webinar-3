@@ -7,6 +7,7 @@ import List from "../../components/list";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import "../main/styles.css";
+import Pagination from "../../components/pagination";
 
 function Main() {
   const store = useStore();
@@ -29,7 +30,6 @@ function Main() {
     list: state.catalog.list,
     amount: state.basket.amount,
     sum: state.basket.sum,
-    // lang: state.isLanguage.isLanguage
     lang: state.isLanguage.isLanguage,
   }));
 
@@ -52,58 +52,21 @@ function Main() {
     ),
   };
 
-
   const renders = {
     item: useCallback(
       (item) => {
-        return <Item item={item} onAdd={callbacks.addToBasket} lang={select.lang} />;
+        return (
+          <Item item={item} onAdd={callbacks.addToBasket} lang={select.lang} />
+        );
       },
       [callbacks.addToBasket, select.lang]
     ),
   };
 
-  const renderPagination = () => {
-    const totalPages = Math.ceil(totalCount / pagination.limit);
-    const currentPage = Math.ceil((pagination.skip + 1) / pagination.limit);
-
-    const pages = [];
-    console.log(totalPages);
-
-    for (let i = 1; i <= totalPages; i++) {
-      const isCurrentPage = i === currentPage;
-
-      if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= currentPage - 1 && i <= currentPage + 1)
-      ) {
-        pages.push(
-          <button
-            key={i}
-            onClick={() => updatePagination(10, (i - 1) * 10)}
-            className={
-              isCurrentPage ? "pagination_active_button" : "pagination-button"
-            }
-          >
-            {i}
-          </button>
-        );
-      } else if (i === currentPage - 2 || i === currentPage + 2) {
-        pages.push(
-          <span key={i} style={{ color: "#CCCCCC" }}>
-            ...
-          </span>
-        );
-      }
-    }
-
-    return pages;
-  };
-
   return (
     <PageLayout>
       <Head
-        type=''
+        type=""
         onCLick={callbacks.toggleLanguage}
         key={select.lang}
         state={select.lang}
@@ -116,16 +79,11 @@ function Main() {
       />
       <List list={select.list} renderItem={renders.item} />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "22px",
-          marginRight: "21px",
-        }}
-      >
-        {renderPagination()}
-      </div>
+        <Pagination
+          totalCount={totalCount}
+          pagination={pagination}
+          updatePagination={updatePagination}
+        />
     </PageLayout>
   );
 }

@@ -63,7 +63,7 @@ const AboutProductPage = () => {
         sum={select.sum}
       />
       {select.aboutProduct !== null && (
-        <div style={{ paddingLeft: "20px" }}>
+        <div style={{ paddingLeft: "50px", paddingRight:"41px" }}>
           <AboutProductContainer
             desc={select.aboutProduct.description}
             country={select.aboutProduct.madeIn.title}
