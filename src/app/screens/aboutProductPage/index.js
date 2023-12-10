@@ -6,15 +6,13 @@ import BasketTool from "../../../components/basket-tool";
 import { useCallback, useEffect } from "react";
 import useStore from "../../../store/use-store";
 import useSelector from "../../../store/use-selector";
-import "../aboutProductPage/styles.css";
 import AboutProductContainer from "../../../components/aboutProductContainer";
 
 const AboutProductPage = () => {
   const store = useStore();
   const { itemId } = useParams();
 
-  const select = useSelector((state) => ({
-    list: state.catalog.list,
+  const { amount, sum, aboutProduct, lang } = useSelector((state) => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
     aboutProduct: state.datas.aboutProduct,
@@ -51,34 +49,28 @@ const AboutProductPage = () => {
     <PageLayout>
       <Head
         onCLick={callbacks.toggleLanguage}
-        title={select.aboutProduct && select.aboutProduct.title}
-        state={select.lang}
+        title={aboutProduct?.title}
+        state={lang}
         type={"aboutProduct"}
       />
 
       <BasketTool
-        lang={select.lang}
+        lang={lang}
         onOpen={callbacks.openModalBasket}
-        amount={select.amount}
-        sum={select.sum}
+        amount={amount}
+        sum={sum}
       />
-      {select.aboutProduct !== null && (
-        <div style={{ paddingLeft: "50px", paddingRight:"41px" }}>
+      {aboutProduct && (
           <AboutProductContainer
-            desc={select.aboutProduct.description}
-            country={select.aboutProduct.madeIn.title}
-            code={select.aboutProduct.madeIn.code}
-            category={select.aboutProduct.category.title}
-            year={select.aboutProduct.edition}
-            price={select.aboutProduct.price}
+            desc={aboutProduct.description}
+            country={aboutProduct.madeIn?.title}
+            code={aboutProduct.madeIn?.code}
+            category={aboutProduct.category?.title}
+            year={aboutProduct.edition}
+            price={aboutProduct.price || 0}
+            onClick={() => callbacks.addToBasket(aboutProduct._id)}
+            lang={lang}
           />
-          <button
-           style={{cursor:'pointer'}}
-            onClick={() => callbacks.addToBasket(select.aboutProduct?._id)}
-          >
-            {select.lang ? "Add to Basket" : "Добавить"}
-          </button>
-        </div>
       )}
     </PageLayout>
   );

@@ -1,45 +1,42 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../pagination/styles.css";
+import { createPaginationPages } from "../../utils";
 
-const Pagination = ({ totalCount, pagination, updatePagination }) => {
-  const totalPages = Math.ceil(totalCount / pagination.limit);
-  const currentPage = Math.ceil((pagination.skip + 1) / pagination.limit);
-  const pages = [];
+const Pagination = ({ catalogState, updatePagination }) => {
+  const { totalPages, currentPage } = catalogState;
+  const { pages, currentIndex } = createPaginationPages(
+    currentPage,
+    totalPages
+  );
 
-  for (let i = 1; i <= totalPages; i++) {
-    const isCurrentPage = i === currentPage;
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - 1 && i <= currentPage + 1)
-    ) {
-      pages.push(
+  const handlePageClick = (page) => {
+    if (typeof page === "number") {
+      updatePagination(catalogState.limit, (page - 1) * catalogState.limit);
+    }
+  };
+
+  return (
+    <div className="container">
+      {pages?.map((page, index) => (
         <button
-          key={i}
-          onClick={() => updatePagination(10, (i - 1) * 10)}
+          key={index}
+          onClick={() => handlePageClick(page)}
           className={
-            isCurrentPage ? "pagination_active_button" : "pagination-button"
+            index === currentIndex
+              ? "pagination_active_button"
+              : "pagination-button"
           }
         >
-          {i}
+          {page}
         </button>
-      );
-    } else if (i === currentPage - 2 || i === currentPage + 2) {
-      pages.push(
-        <span key={i} style={{ color: "#CCCCCC" }}>
-          ...
-        </span>
-      );
-    }
-  }
-
-  return <div className="container">{pages}</div>;
+      ))}
+    </div>
+  );
 };
 
 Pagination.propTypes = {
-  totalCount: PropTypes.number.isRequired,
-  pagination: PropTypes.shape({
+  catalogState: PropTypes.shape({
     limit: PropTypes.number.isRequired,
     skip: PropTypes.number.isRequired,
   }).isRequired,

@@ -7,13 +7,13 @@
  * @param [locale] {String} Локаль (код языка)
  * @returns {String}
  */
-export function plural(value, variants = {}, locale = 'ru-RU') {
+export function plural(value, variants = {}, locale = "ru-RU") {
   // Получаем фурму кодовой строкой: 'zero', 'one', 'two', 'few', 'many', 'other'
   // В русском языке 3 формы: 'one', 'few', 'many', и 'other' для дробных
   // В английском 2 формы: 'one', 'other'
   const key = new Intl.PluralRules(locale).select(value);
   // Возвращаем вариант по ключу, если он есть
-  return variants[key] || '';
+  return variants[key] || "";
 }
 
 /**
@@ -30,41 +30,41 @@ export function codeGenerator(start = 0) {
  * @param options {Object}
  * @returns {String}
  */
-export function numberFormat(value, locale = 'ru-RU', options = {}) {
+export function numberFormat(value, locale = "ru-RU", options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
 
-export function getPagination(options) {
-  const { length, totalCount, currentPage } = options;
-
-  const numberOfPages = Math.ceil(totalCount / length);
-
-  if (currentPage > numberOfPages || currentPage < 1) {
-    throw Error("Wrong current page", currentPage);
-  }
-
-  if (numberOfPages <= 5) {
-    return Array.from({ length: numberOfPages }, (_, i) => i + 1);
-  }
-
-  const pages = [1, 2, 3];
-
-  if (currentPage > 3) {
-    pages.push("...");
-  }
-
-  if (currentPage <= numberOfPages - 2) {
-    pages.push(currentPage - 1, currentPage, currentPage + 1);
+export const createPaginationPages = (curr, max) => {
+  if (!curr || !max) return [];
+  let currentIndex;
+  let pages;
+  if (max <= 7) {
+    for (let i = 1; i <= max; i++) {
+      pages.push(i);
+      return { pages, currentIndex: curr - 1 };
+    }
   } else {
-    pages.push(numberOfPages - 2, numberOfPages - 1, numberOfPages);
+    if (curr < 3) {
+      pages = [1, 2, 3, "...", max];
+      currentIndex = curr;
+    }
+    if (curr === 3) {
+      pages = [1, 2, 3, 4, "...", max];
+      currentIndex = 3;
+    }
+    if (curr > 3 && curr < max - 2) {
+      pages = [1, "...", curr - 1, curr, curr + 1, "...", max];
+      currentIndex = 4;
+    }
+    if (curr === max - 2) {
+      pages = [1, "...", curr - 1, curr, curr + 1, max];
+      currentIndex = 4;
+    }
+    if (curr > max - 2) {
+      pages = [1, "...", max - 2, max - 1, max];
+      currentIndex = 5 - (max - curr);
+    }
+    currentIndex -= 1;
   }
-
-  if (currentPage < numberOfPages - 2) {
-    pages.push("...");
-  }
-
-  pages.push(numberOfPages);
-
-  return pages;
-}
-
+  return { pages, currentIndex };
+};

@@ -8,7 +8,7 @@ const NavBar = ({ lang }) => {
       {lang ? "Home" : "Главная"}
     </Link>
   );
-}
+};
 
 NavBar.propTypes = {
   lang: PropTypes.bool.isRequired,

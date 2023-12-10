@@ -1,0 +1,30 @@
+.productContainer {
+    /* paddingLeft: "50px", paddingRight: "41px"  */
+    margin: 0 41px 0 50px;
+}
+
+.boldText {
+    font-weight: 700;
+  }
+  
+  .priceText {
+    color: #000;
+  
+    font-family: Arial;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .productText {
+    color: #000;
+  
+    font-family: Arial;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  
