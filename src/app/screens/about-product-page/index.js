@@ -44,6 +44,10 @@ const AboutProductPage = () => {
       await store.actions.datas.loadAboutProduct(itemId);
     };
     fetchData();
+
+    return () => {
+      store.actions.datas.clearAboutProduct();
+    };
   }, [itemId, store.actions.datas]);
 
   return (

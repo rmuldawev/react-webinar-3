@@ -7,18 +7,29 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
 import NavContainer from "../../components/nav-container";
+import Spinner from "../../components/spiner";
 
 function Main() {
   const store = useStore();
 
   const [pagination, setPagination] = useState({ limit: 10, skip: 0 });
+  const [loading, setLoading] = useState(false);
 
   const updatePagination = (newLimit, newSkip) =>
     setPagination({ limit: newLimit, skip: newSkip });
 
   useEffect(() => {
-    store.actions.catalog.load(pagination.limit, pagination.skip);
-  }, [pagination]);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await store.actions.catalog.load(pagination.limit, pagination.skip);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [pagination, store.actions.catalog]);
 
   const select = useSelector((state) => ({
     total: state.catalog.totalCount,
@@ -75,7 +86,11 @@ function Main() {
         amount={select.amount}
         sum={select.sum}
       />
-      <List list={select.list} renderItem={renders.item} />
+      {loading ? (
+        <Spinner />
+      ) : (
+        <List list={select.list} renderItem={renders.item} />
+      )}
       <Pagination
         catalogState={{
           ...pagination,
