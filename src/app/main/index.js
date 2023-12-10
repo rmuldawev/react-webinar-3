@@ -2,11 +2,11 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import Item from "../../components/item";
 import PageLayout from "../../components/page-layout";
 import Head from "../../components/head";
-import BasketTool from "../../components/basket-tool";
 import List from "../../components/list";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
+import NavContainer from "../../components/nav-container";
 
 function Main() {
   const store = useStore();
@@ -29,7 +29,7 @@ function Main() {
     lang: state.isLanguage.isLanguage,
     totalPages: state.catalog.totalPages,
   }));
-  console.log('select.currentPage',select.currentPage)
+  console.log("select.currentPage", select.currentPage);
 
   const callbacks = {
     addToBasket: useCallback(
@@ -69,7 +69,7 @@ function Main() {
         key={select.lang}
         state={select.lang}
       />
-      <BasketTool
+      <NavContainer
         lang={select.lang}
         onOpen={callbacks.openModalBasket}
         amount={select.amount}

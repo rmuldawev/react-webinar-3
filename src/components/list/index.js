@@ -1,7 +1,6 @@
 import {memo} from "react";
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Item from "../item";
 import './style.css';
 
 function List({list, renderItem}) {

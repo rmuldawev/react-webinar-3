@@ -2,11 +2,12 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Head from "../../../components/head";
 import PageLayout from "../../../components/page-layout";
-import BasketTool from "../../../components/basket-tool";
 import { useCallback, useEffect } from "react";
 import useStore from "../../../store/use-store";
 import useSelector from "../../../store/use-selector";
-import AboutProductContainer from "../../../components/aboutProductContainer";
+import AboutProductContainer from "../../../components/about-product-container";
+import NavContainer from "../../../components/nav-container";
+import Spinner from "../../../components/spiner";
 
 const AboutProductPage = () => {
   const store = useStore();
@@ -53,24 +54,25 @@ const AboutProductPage = () => {
         state={lang}
         type={"aboutProduct"}
       />
-
-      <BasketTool
+      <NavContainer
         lang={lang}
         onOpen={callbacks.openModalBasket}
         amount={amount}
         sum={sum}
       />
-      {aboutProduct && (
-          <AboutProductContainer
-            desc={aboutProduct.description}
-            country={aboutProduct.madeIn?.title}
-            code={aboutProduct.madeIn?.code}
-            category={aboutProduct.category?.title}
-            year={aboutProduct.edition}
-            price={aboutProduct.price || 0}
-            onClick={() => callbacks.addToBasket(aboutProduct._id)}
-            lang={lang}
-          />
+      {aboutProduct ? (
+        <AboutProductContainer
+          desc={aboutProduct.description}
+          country={aboutProduct.madeIn?.title}
+          code={aboutProduct.madeIn?.code}
+          category={aboutProduct.category?.title}
+          year={aboutProduct.edition}
+          price={aboutProduct.price || 0}
+          onClick={() => callbacks.addToBasket(aboutProduct._id)}
+          lang={lang}
+        />
+      ) : (
+        <Spinner />
       )}
     </PageLayout>
   );

@@ -1,14 +1,13 @@
 import StoreModule from "../module";
 
 class Basket extends StoreModule {
-
   initState() {
     return {
       list: [],
       aboutProduct: null,
       sum: 0,
-      amount: 0
-    }
+      amount: 0,
+    };
   }
 
   /**
@@ -16,21 +15,24 @@ class Basket extends StoreModule {
    * @param _id Код товара
    */
 
-
-  async loadAboutProduct (id) {
+  async loadAboutProduct(id) {
     try {
-      const res = await fetch(`api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`);
+      const res = await fetch(
+        `api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
+      );
       const json = await res.json();
 
-      this.setState({
-        ...this.getState(),
-        aboutProduct: json.result || null,
-      }, 'Данные о товаре загружены');
+      this.setState(
+        {
+          ...this.getState(),
+          aboutProduct: json.result || null,
+        },
+        "Данные о товаре загружены"
+      );
     } catch (error) {
-      console.error('Ошибка при загрузке данных о товаре:', error);
+      console.error("Ошибка при загрузке данных о товаре:", error);
     }
   }
-
 
   async addToBasket(_id) {
     let sum = 0;
@@ -49,34 +51,40 @@ class Basket extends StoreModule {
     });
 
     if (!exist) {
-          // Поиск товара в каталоге, чтобы его добавить в корзину.
-          // @todo В реальном приложении будет запрос к АПИ вместо поиска по состоянию. - DONE
-          let item = this.store
-            .getState()
-            .catalog.list.find((item) => item._id === _id);
-      
-          if (!item) {
-            item = await this.loadOneItem(_id);
-          }
-      
-          list.push({ ...item, amount: 1 }); // list уже новый, в него можно пушить.
-          // Добавляем к сумме.
-          sum += item.price;
-        }
+      // Поиск товара в каталоге, чтобы его добавить в корзину.
+      // @todo В реальном приложении будет запрос к АПИ вместо поиска по состоянию. - DONE
+      let item = this.store
+        .getState()
+        .catalog.list.find((item) => item._id === _id);
 
-    this.setState({
-      ...this.getState(),
-      list,
-      sum,
-      amount: list.length,
-    }, 'Добавление в корзину');
+      if (!item) {
+        item = await this.loadOneItem(_id);
+      }
+
+      list.push({ ...item, amount: 1 }); // list уже новый, в него можно пушить.
+      // Добавляем к сумме.
+      sum += item.price;
+    }
+
+    this.setState(
+      {
+        ...this.getState(),
+        list,
+        sum,
+        amount: list.length,
+      },
+      "Добавление в корзину"
+    );
   }
 
   async loadOneItem(productId) {
-      const res = await fetch(`/api/v1/articles/${productId}?fields=*,madeIn(title,code),category(title)`, { headers: { "Accept-Language": "ru" } });
-      const data = await res.json();
-      return data.result;
-    }
+    const res = await fetch(
+      `/api/v1/articles/${productId}?fields=*,madeIn(title,code),category(title)`,
+      { headers: { "Accept-Language": "ru" } }
+    );
+    const data = await res.json();
+    return data.result;
+  }
 
   /**
    * Удаление товара из корзины
@@ -84,21 +92,22 @@ class Basket extends StoreModule {
    */
   removeFromBasket(_id) {
     let sum = 0;
-    const list = this.getState().list.filter(item => {
+    const list = this.getState().list.filter((item) => {
       if (item._id === _id) return false;
       sum += item.price * item.amount;
       return true;
     });
 
-    this.setState({
-      ...this.getState(),
-      list,
-      sum,
-      amount: list.length
-    }, 'Удаление из корзины');
+    this.setState(
+      {
+        ...this.getState(),
+        list,
+        sum,
+        amount: list.length,
+      },
+      "Удаление из корзины"
+    );
   }
 }
 
 export default Basket;
-
-
