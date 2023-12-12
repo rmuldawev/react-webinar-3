@@ -20,6 +20,7 @@ function CatalogList() {
     count: state.catalog.count,
     waiting: state.catalog.waiting,
   }));
+  console.log('start')
 
   const callbacks = {
     // Добавление в корзину
