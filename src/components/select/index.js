@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 function Select(props) {
+  console.log('props',props)
 
   const onSelect = (e) => {
     props.onChange(e.target.value);

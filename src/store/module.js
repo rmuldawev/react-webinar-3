@@ -1,3 +1,33 @@
+// /**
+//  * Базовый класс для модулей хранилища (внешнего состояния)
+//  * Для группировки действий над внешним состоянием
+//  */
+// class StoreModule {
+
+//   constructor(store, name) {
+//     this.store = store;
+//     this.name = name;
+//   }
+
+//   initState() {
+//     return {}
+//   }
+
+//   getState() {
+//     return this.store.getState()[this.name];
+//   }
+
+//   setState(newState, description = 'setState') {
+//     this.store.setState({
+//       ...this.store.getState(),
+//       [this.name]: newState
+//     }, description)
+//   }
+
+// }
+
+// export default StoreModule;
+
 /**
  * Базовый класс для модулей хранилища (внешнего состояния)
  * Для группировки действий над внешним состоянием
@@ -10,20 +40,19 @@ class StoreModule {
   }
 
   initState() {
-    return {}
+    return {};
   }
 
   getState() {
-    return this.store.getState()[this.name];
+    const state = this.store.getState();
+    return state ? state[this.name] : {};
   }
 
   setState(newState, description = 'setState') {
-    this.store.setState({
-      ...this.store.getState(),
-      [this.name]: newState
-    }, description)
+    const currentState = this.store.getState();
+    const updatedState = Object.assign({}, currentState, { [this.name]: newState });
+    this.store.setState(updatedState, description);
   }
-
 }
 
 export default StoreModule;

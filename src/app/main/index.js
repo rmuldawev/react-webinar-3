@@ -8,6 +8,7 @@ import Head from "../../components/head";
 import CatalogFilter from "../../containers/catalog-filter";
 import CatalogList from "../../containers/catalog-list";
 import LocaleSelect from "../../containers/locale-select";
+import SingIn from '../../components/sing-in';
 
 /**
  * Главная страница - первичная загрузка каталога
@@ -24,6 +25,7 @@ function Main() {
 
   return (
     <PageLayout>
+      <SingIn title='Вход'/>
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>
