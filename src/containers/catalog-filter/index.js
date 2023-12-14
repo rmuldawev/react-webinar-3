@@ -26,7 +26,6 @@ function CatalogFilter() {
   const callbacks = {
     // Категории
     onCategory: useCallback(category => {
-      console.log('category',category)
       store.actions.catalog.setParams({category},[store])}),
     // Сортировка
     onSort: useCallback(sort =>{
@@ -48,8 +47,6 @@ function CatalogFilter() {
 
   const {t} = useTranslate();
   
-  // const formattedCategories = formatCategories(categories);
-  // console.log("formattedCategories", formattedCategories);
 
   return (
     <SideLayout padding='medium'>

@@ -32,15 +32,13 @@ class CatalogState extends StoreModule {
    */
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
-    const res = await fetchCategories().then(response => {
-      return response.result.items
-    })
-    const categories = res.map(e=>{
-      return {title: e.title,
-      value: e._id,
-    parent: e.parent}
-    })
-    console.log('categories',categories)
+    const res = await fetchCategories().then((response) => {
+      return response.result.items;
+    });
+    const categories = res.map((e) => {
+      return { title: e.title, value: e._id, parent: e.parent };
+    });
+    // console.log("categories", categories);
     this.setState({ ...this.getState(), categories });
     let validParams = {};
     if (urlParams.has("page"))
@@ -106,10 +104,9 @@ class CatalogState extends StoreModule {
       sort: params.sort,
       "search[query]": params.query,
     };
-    if( params.category !== 'All'){
-      apiParams['search[category]'] = params.category
+    if (params.category !== "All") {
+      apiParams["search[category]"] = params.category;
     }
-    // console.log('apiParams',apiParams)
 
     const response = await fetch(
       `/api/v1/articles?${new URLSearchParams(apiParams)}`

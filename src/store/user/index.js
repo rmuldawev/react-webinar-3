@@ -1,111 +1,123 @@
 import StoreModule from "../module";
+import { useNavigate } from "react-router-dom";
 
-class UserAuthState extends StoreModule {
+class UserAuth extends StoreModule {
   initState() {
     return {
-      isAuthenticated: false,
+      isAuth: false,
       token: null,
       user: null,
-      error: null,
     };
   }
 
-  /**
-   * Авторизация пользователя
-   * @param {string} login
-   * @param {string} password
-   */
-  async load(currentState) {
+  async login(login, password) {
     try {
+      const response = await fetch("/api/v1/users/sign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          login: login,
+          password: password,
+          remember: true,
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.setState(
+          {
+            isAuth: true,
+            token: data.result.token,
+            user: data.result.user,
+          },
+          "Авторизация успешна"
+        );
+        localStorage.setItem("accessToken", data.result.token);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Ошибка авторизации");
+      }
+    } catch (error) {
+      console.error("Ошибка в процессе авторизации:", error.message);
+      throw new Error("Ошибка в процессе авторизации");
+    }
+  }
+
+  async getUserInfo(token) {
+    try {
+      if (!token) {
+        throw new Error("Токен отсутствует");
+      }
+
       const response = await fetch("/api/v1/users/self?fields=*", {
         method: "GET",
         headers: {
-          "X-Token": currentState.token,
+          "X-Token": token,
           "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
-        const user = await response.json();
-        this.setState({ ...currentState, user, error: null });
-      } else {
-        const error = await response.json();
+        const userData = await response.json();
+        console.log("userData", userData.result);
         this.setState({
-          ...currentState,
-          isAuthenticated: false,
-          token: null,
-          user: null,
-          error,
+          user: userData.result,
         });
+      } else {
+        const errorData = await response.json();
+        console.error(
+          "Ошибка при получении данных пользователя:",
+          errorData.message
+        );
+        throw new Error(
+          errorData.message || "Ошибка при получении данных пользователя"
+        );
       }
     } catch (error) {
-      console.error("Ошибка при загрузке профиля:", error);
-      this.setState({
-        ...currentState,
-        isAuthenticated: false,
-        token: null,
-        user: null,
-        error,
-      });
+      console.error("Ошибка при получении данных пользователя:", error.message);
+      throw new Error("Ошибка при получении данных пользователя");
     }
   }
 
 
-  
-  /**
-   * Выход - отмена авторизации для удаления токена
-   */
-  async logout() {
-    const currentState = this.getState(); // Получаем текущее состояние
-    // Дополнительные действия при выходе, например, очистка данных пользователя
-    this.setState({
-      ...currentState,
-      isAuthenticated: false,
-      token: null,
-      user: null,
+  async logout(token) {
+  try {
+    // const token = this.state.token;
+
+    if (!token) {
+      throw new Error("Токен отсутствует");
+    }
+
+    const response = await fetch("/api/v1/users/sign", {
+      method: "DELETE",
+      headers: {
+        "X-Token": token,
+        "Content-Type": "application/json",
+      },
     });
-  }
 
-  /**
-   * Загрузка профиля пользователя
-   */
-  async loadUserProfile() {
-    try {
-      const currentState = this.getState(); // Получаем текущее состояние
-
-      const response = await fetch("/api/v1/users/self?fields=*", {
-        method: "GET",
-        headers: {
-          "X-Token": currentState.token,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const user = await response.json();
-        this.setState({ ...currentState, user, error: null });
-      } else {
-        const error = await response.json();
-        this.setState({
-          ...currentState,
-          isAuthenticated: false,
+    if (response.ok) {
+      this.setState(
+        {
+          ...this.getState(),
+          isAuth: false,
           token: null,
           user: null,
-          error,
-        });
-      }
-    } catch (error) {
-      console.error("Ошибка при загрузке профиля:", error);
-      const currentState = this.getState(); // Получаем текущее состояние
-      this.setState({
-        ...currentState,
-        isAuthenticated: false,
-        token: null,
-        user: null,
-        error,
-      });
+        },
+        "Выход успешен"
+      );
+      localStorage.removeItem("accessToken");
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Ошибка при выходе");
     }
+  } catch (error) {
+    console.error("Ошибка при выходе:", error.message);
+    throw new Error("Ошибка при выходе");
   }
 }
 
-export default UserAuthState;
+}
+
+export default UserAuth;

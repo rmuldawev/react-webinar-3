@@ -33,3 +33,81 @@ export function codeGenerator(start = 0) {
 export function numberFormat(value, locale = 'ru-RU', options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
+
+
+
+
+// async getUserInfo() {
+//   try {
+//     const token = this.state.token;
+
+//     if (!token) {
+//       throw new Error("Токен отсутствует");
+//     }
+
+//     const response = await fetch("/api/v1/users/self?fields=*", {
+//       method: "GET",
+//       headers: {
+//         "X-Token": token,
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     if (response.ok) {
+//       const userData = await response.json();
+//       console.log('userData',userData)
+//       this.setState({
+//         ...this.getState(),
+//         user: userData.result,
+//       });
+//       return userData.result;
+//     } else {
+//       const errorData = await response.json();
+//       throw new Error(
+//         errorData.message || "Ошибка при получении данных пользователя"
+//       );
+//     }
+//   } catch (error) {
+//     console.error("Ошибка при получении данных пользователя:", error.message);
+//     throw new Error("Ошибка при получении данных пользователя");
+//   }
+// }
+
+// async logout() {
+//   try {
+//     const token = this.state.token;
+
+//     if (!token) {
+//       throw new Error("Токен отсутствует");
+//     }
+
+//     const response = await fetch("/api/v1/users/sign", {
+//       method: "DELETE",
+//       headers: {
+//         "X-Token": token,
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     if (response.ok) {
+//       this.setState(
+//         {
+//           ...this.getState(),
+//           isAuth: false,
+//           token: null,
+//           user: null,
+//         },
+//         "Выход успешен"
+//       );
+//       localStorage.removeItem("accessToken");
+//     } else {
+//       const errorData = await response.json();
+//       throw new Error(errorData.message || "Ошибка при выходе");
+//     }
+//   } catch (error) {
+//     console.error("Ошибка при выходе:", error.message);
+//     throw new Error("Ошибка при выходе");
+//   }
+// }
+
+

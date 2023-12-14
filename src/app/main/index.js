@@ -9,13 +9,24 @@ import CatalogFilter from "../../containers/catalog-filter";
 import CatalogList from "../../containers/catalog-list";
 import LocaleSelect from "../../containers/locale-select";
 import SingIn from '../../components/sing-in';
+import useSelector from '../../hooks/use-selector';
 
 /**
  * Главная страница - первичная загрузка каталога
  */
 function Main() {
+  const auth = localStorage.getItem("accessToken");
+
 
   const store = useStore();
+
+  const select = useSelector((state) => ({
+    isAuth: state.user.isAuth,
+    token: state.user.token,
+    user: state.user.user
+  }));
+
+
 
   useInit(() => {
     store.actions.catalog.initParams();
@@ -25,7 +36,7 @@ function Main() {
 
   return (
     <PageLayout>
-      <SingIn title='Вход'/>
+      <SingIn title='Вход' isAuth={auth} />
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>
