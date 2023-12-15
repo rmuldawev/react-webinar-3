@@ -34,18 +34,30 @@ const Login = () => {
 
   const handleLogin = async (login, password) => {
     try {
-      await store.actions.user.login(login, password)
+      await store.actions.user.login(login, password);
       navigate("/profile");
-      //  await handleUserInfo(select.token);
     } catch (error) {
-      console.error("Ошибка при входе:", error);
+      console.error("Ошибка авторизации", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await store.actions.user.logout(auth);
+    } catch (error) {
+      console.error("Ошибка при удалении токена:", error);
     }
   };
 
   return (
     <FormProvider {...methods}>
       <PageLayout>
-        <SingIn title={t("Вход")} isAuth={auth} user={select.user} />
+        <SingIn
+          title={t("Вход")}
+          isAuth={auth}
+          user={select.user}
+          onClick={handleLogout}
+        />
         <Head title={t("title")}>
           <LocaleSelect />
         </Head>

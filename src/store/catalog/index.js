@@ -35,11 +35,63 @@ class CatalogState extends StoreModule {
     const res = await fetchCategories().then((response) => {
       return response.result.items;
     });
-    const categories = [{ title: 'Все', value: 'All', parent: null },...res.map((e) => {
-      return { title: e.title, value: e._id, parent: e.parent };
-    })]
+    const categories = [
+      { title: "Все", value: "All", parent: null },
+      ...res.map((e) => {
+        return { title: e.title, value: e._id, parent: e.parent };
+      }),
+    ];
+    console.log(categories);
+
+    function buildSortedHierarchyWithDashes(
+      data,
+      parentValue = null,
+      prefix = ""
+    ) {
+      const result = [];
+
+      for (const item of data) {
+        const parentId = item.parent ? item.parent._id : null;
+        if (parentId === parentValue) {
+          const children = buildSortedHierarchyWithDashes(
+            data,
+            item.value,
+            prefix + "-"
+          );
+          if (children.length > 0) {
+            item.children = children;
+          }
+          item.title = prefix + item.title;
+          result.push(item);
+        }
+      }
+
+      return result.sort((a, b) => a.value - b.value);
+    }
+
+    // Используем функцию для построения отсортированной иерархии и добавления "-"
+    const sortedHierarchyWithDashes =
+      buildSortedHierarchyWithDashes(categories);
+
+    // Преобразовать результат в первоначальный массив
+    const transformedArray = [];
+    const traverse = (item) => {
+      transformedArray.push({ ...item, children: undefined }); // Копируем объект, убирая поле "children"
+      if (item.children) {
+        for (const child of item.children) {
+          traverse(child);
+        }
+      }
+    };
+
+    for (const item of sortedHierarchyWithDashes) {
+      traverse(item);
+    }
+
+    console.log("transformedArray", transformedArray);
+
     // console.log("categories", categories);
-    this.setState({ ...this.getState(), categories });
+    this.setState({ ...this.getState(), categories: transformedArray });
     let validParams = {};
     if (urlParams.has("page"))
       validParams.page = Number(urlParams.get("page")) || 1;

@@ -3,7 +3,7 @@ import '../sing-in/styles.css';
 import { useNavigate } from "react-router-dom";
 import useSelector from "../../hooks/use-selector";
 
-const SingIn = ({ title, isAuth}) => {
+const SingIn = ({ title, isAuth,onClick}) => {
   const navigate = useNavigate()
 
   // console.log('userData',currUser)
@@ -19,10 +19,11 @@ const SingIn = ({ title, isAuth}) => {
 
 
 
-  const handleLogout = async() => {
-    localStorage.removeItem("accessToken");
-    console.log('token deleted');
-  };
+  // const handleLogout = async() => {
+  //   // localStorage.removeItem("accessToken");
+  //   await log
+  //   console.log('token deleted');
+  // };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems:'center' }}>
@@ -36,7 +37,7 @@ const SingIn = ({ title, isAuth}) => {
 
           }
           <Link to={"/"}>
-            <button onClick={handleLogout} className="buttonStyle">
+            <button onClick={onClick} className="buttonStyle">
               Выход
             </button>
           </Link>

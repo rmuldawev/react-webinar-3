@@ -109,7 +109,6 @@ class UserAuth extends StoreModule {
           {
             ...this.getState(),
             isAuth: false,
-            token: null,
             user: null,
           },
           "Выход успешен"

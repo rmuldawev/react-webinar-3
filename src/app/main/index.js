@@ -34,9 +34,17 @@ function Main() {
 
   const {t} = useTranslate();
 
+  const handleLogout = async () => {
+    try {
+      await store.actions.user.logout(auth);
+    } catch (error) {
+      console.error("Ошибка при удалении токена:", error);
+    }
+  };
+
   return (
     <PageLayout>
-      <SingIn title='Вход' isAuth={auth} />
+      <SingIn title='Вход' isAuth={auth} onClick={handleLogout} />
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>
