@@ -17,14 +17,13 @@ const Login = () => {
   const auth = localStorage.getItem("accessToken");
 
   const methods = useForm({
-    // resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
 
-  const {
-    formState: { isValid, errors },
-    getValues,
-  } = methods;
+  // const {
+  //   formState: { isValid, errors },
+  //   getValues,
+  // } = methods;
 
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,

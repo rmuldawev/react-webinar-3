@@ -5,61 +5,11 @@ import useSelector from "../../hooks/use-selector";
 import Select from "../../components/select";
 import Input from "../../components/input";
 import SideLayout from "../../components/side-layout";
-import { fetchCategories } from "../../store/catalog";
 
 /**
  * Контейнер со всеми фильтрами каталога
  */
-const data = [
-  {
-      "_id": "0",
-      "parent": null,
-      "title": "All"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb2d",
-      "parent": null,
-      "title": "Electronics"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb2e",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb2d" },
-      "title": "Phones"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb2f",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb2d" },
-      "title": "Laptops"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb30",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb2d" },
-      "title": "TVs"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb31",
-      "parent": null,
-      "title": "Literature"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb32",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb31"},
-      "title": "Study Literature"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb33",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb31" },
-      "title": "Fictional Literature"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb34",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb31" },
-      "title": "Comic books"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb35",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb2e" },
-      "title": "Smartphones"
-  }, {
-      "_id": "61c0a9cb8f67e811d55abb36",
-      "parent": { "_id": "61c0a9cb8f67e811d55abb35" },
-      "title": "Accessories"
-  }
-];
 function CatalogFilter() {
-  const [categories, setCategories] = useState([]);
-
   const store = useStore();
 
   const select = useSelector((state) => ({
@@ -69,53 +19,6 @@ function CatalogFilter() {
     categories: state.catalog.categories,
   }));
   console.log("categories", select.categories);
-
-  const createLinkedList = (items) => {
-    const linkedList = {};
-  
-    items.forEach((item) => {
-      if (item.parent) {
-        if (!linkedList[item.parent.value]) {
-          linkedList[item.parent.value] = [];
-        }
-        linkedList[item.parent.value].push(item);
-      } else {
-        linkedList[item.value] = item;
-      }
-    });
-  
-    return linkedList;
-  };
-
-  const modifyTitles = (linkedList, parentId = null) => {
-    const items = linkedList[parentId] || [];
-  
-    return items.map((item) => {
-      const newTitle = parentId ? `${parentId} - ${item.title}` : item.title;
-      return {
-        ...item,
-        title: newTitle,
-        children: modifyTitles(linkedList, item.value),
-      };
-    });
-  };
-
-  useEffect(() => {
-    // Проверка на null и выполнение логики
-    if (select.categories !== null) {
-      const linkedList = createLinkedList(select.categories);
-      const modifiedData = modifyTitles(linkedList);
-      console.log('modifiedData', modifiedData);
-    }
-  }, [select.categories]);
-
-// console.log('modifiedData', modifiedData);
-
-
-
-
-
-
 
   const callbacks = {
     // Категории

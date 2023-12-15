@@ -5,7 +5,6 @@ class UserAuth extends StoreModule {
   initState() {
     return {
       isAuth: false,
-      // token: null,
       user: null,
     };
   }
@@ -29,7 +28,7 @@ class UserAuth extends StoreModule {
         console.log("userData", userData.result);
         this.setState({
           user: userData.result,
-          isAuth:true
+          isAuth: true,
         });
       } else {
         const errorData = await response.json();
@@ -60,20 +59,18 @@ class UserAuth extends StoreModule {
           remember: true,
         }),
       });
-      console.log('response',response)
+      console.log("response", response);
       if (response.ok) {
         const data = await response.json();
-        console.log('data',data)
+        console.log("data", data);
         this.setState(
           {
             isAuth: true,
-            // token: data.result.token,
             user: data.result.user,
           },
           "Авторизация успешна"
         );
         if (data.result.token) {
-          
           localStorage.setItem("accessToken", data.result.token);
         }
       } else {
@@ -86,12 +83,8 @@ class UserAuth extends StoreModule {
     }
   }
 
-
-
   async logout(token) {
     try {
-      // const token = this.state.token;
-
       if (!token) {
         throw new Error("Токен отсутствует");
       }

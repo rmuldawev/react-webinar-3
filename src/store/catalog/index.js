@@ -69,14 +69,12 @@ class CatalogState extends StoreModule {
       return result.sort((a, b) => a.value - b.value);
     }
 
-    // Используем функцию для построения отсортированной иерархии и добавления "-"
     const sortedHierarchyWithDashes =
       buildSortedHierarchyWithDashes(categories);
 
-    // Преобразовать результат в первоначальный массив
     const transformedArray = [];
     const traverse = (item) => {
-      transformedArray.push({ ...item, children: undefined }); // Копируем объект, убирая поле "children"
+      transformedArray.push({ ...item, children: undefined });
       if (item.children) {
         for (const child of item.children) {
           traverse(child);
@@ -90,7 +88,6 @@ class CatalogState extends StoreModule {
 
     console.log("transformedArray", transformedArray);
 
-    // console.log("categories", categories);
     this.setState({ ...this.getState(), categories: transformedArray });
     let validParams = {};
     if (urlParams.has("page"))
@@ -188,7 +185,7 @@ export const fetchCategories = async () => {
     }
 
     const data = await response.json();
-    return data; // Assuming the response contains the list of categories
+    return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;
