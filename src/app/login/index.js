@@ -34,8 +34,8 @@ const Login = () => {
 
   const handleLogin = async (login, password) => {
     try {
-      await store.actions.user.login(login, password);
-      navigate("/profile",select.token);
+      await store.actions.user.login(login, password)
+      navigate("/profile");
       //  await handleUserInfo(select.token);
     } catch (error) {
       console.error("Ошибка при входе:", error);

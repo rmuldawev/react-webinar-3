@@ -8,35 +8,31 @@ import useStore from "../../hooks/use-store.js";
 import useSelector from "../../hooks/use-selector.js";
 import { useEffect } from "react";
 import ProfileCard from "../../components/profile-card/index.js";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const store = useStore();
   const { t } = useTranslate();
+  const navigate = useNavigate();
   const auth = localStorage.getItem("accessToken");
 
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,
-    token: state.user.token,
     user: state.user.user,
   }));
 
   console.log("select.user", select.user);
+  console.log("authtoken", auth);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        await store.actions.user.getUserInfo(auth);
-      } catch (error) {
-        console.error("Профиль не загружен", error);
-      }
-    };
-
-    fetchUserInfo();
-  }, [store.actions.user, select.token]);
+    if (!auth) {
+      navigate("/singin");
+    }
+  }, []);
 
   return (
     <PageLayout>
-      <SingIn title={t("Вход")} isAuth={auth}/>
+      <SingIn title={t("Вход")} isAuth={auth} />
       <Head title={t("title")}>
         <LocaleSelect />
       </Head>

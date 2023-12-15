@@ -35,9 +35,9 @@ class CatalogState extends StoreModule {
     const res = await fetchCategories().then((response) => {
       return response.result.items;
     });
-    const categories = res.map((e) => {
+    const categories = [{ title: 'Все', value: 'All', parent: null },...res.map((e) => {
       return { title: e.title, value: e._id, parent: e.parent };
-    });
+    })]
     // console.log("categories", categories);
     this.setState({ ...this.getState(), categories });
     let validParams = {};

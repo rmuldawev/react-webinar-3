@@ -6,20 +6,36 @@ import Basket from "./basket";
 import Article from "./article";
 import Login from "./login";
 import Profile from "./profile";
+import useStore from "../hooks/use-store";
 
 /**
  * Приложение
  * Маршрутизация по страницам и модалкам
  */
 function App() {
+  const store = useStore()
   const activeModal = useSelector((state) => state.modals.name);
-  const auth = localStorage.getItem("accessToken");
-  console.log('auth')
+  const select = useSelector((state) => ({
+    isAuth: state.user.isAuth,
+    token: state.user.token,
+    user: state.user.user,
+  }));
+  console.log('authdasdasdasdasd', select.isAuth)
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const token = localStorage.getItem("accessToken");
+      if(token){
+        await store.actions.user.getUserInfo(token);
+      }
+    };
+
+    fetchUserInfo();
+  }, [store.actions.user, select.token]);
 
   return (
     <>
       <Routes>
-        {auth  ? (
+        {select.isAuth  ? (
           <>
             <Route path={""} element={<Main />} />
             <Route path={"/articles/:id"} element={<Article />} />
