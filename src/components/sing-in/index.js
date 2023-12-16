@@ -32,7 +32,7 @@ const UserHeader = ({ title, isAuth, onClick, user }) => {
 
 UserHeader.propTypes = {
   title: PropTypes.string.isRequired,
-  isAuth: PropTypes.bool,
+  isAuth: PropTypes.node,
   onClick: PropTypes.func,
   user: PropTypes.shape({
     profile: PropTypes.shape({
