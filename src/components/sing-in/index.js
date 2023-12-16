@@ -1,29 +1,17 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import "../sing-in/styles.css";
-import useSelector from "../../hooks/use-selector";
 
-const SingIn = ({ title, isAuth, onClick }) => {
-  const select = useSelector((state) => ({
-    isAuth: state.user.isAuth,
-    token: state.user.token,
-    user: state.user.user,
-  }));
+const UserHeader = ({ title, isAuth, onClick, user }) => {
+  console.log("singinAuth", isAuth);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    >
+    <div className="userContainer">
       {isAuth ? (
         <>
-          {select.user && (
+          {user && (
             <Link to={"/profile"}>
-              <p style={{ marginRight: "20px", color: "#0087E9" }}>
-                {select.user.profile.name}
-              </p>
+              <p className="userNameText">{user.profile.name}</p>
             </Link>
           )}
           <Link to={"/"}>
@@ -43,4 +31,4 @@ const SingIn = ({ title, isAuth, onClick }) => {
   );
 };
 
-export default SingIn;
+export default React.memo(UserHeader);

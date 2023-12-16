@@ -1,3 +1,14 @@
 .buttonStyle {
-    margin: 10px 20px 10px 0;
+  margin: 10px 20px 10px 0;
+}
+
+.userContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.userNameText {
+  margin-right: 20px;
+  color: #0087e9;
 }

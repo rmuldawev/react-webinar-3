@@ -23,7 +23,7 @@ function CatalogFilter() {
   const callbacks = {
     // Категории
     onCategory: useCallback((category) => {
-      store.actions.catalog.setParams({ category }, [store]);
+      store.actions.catalog.setParams({ category, page: 1 }, [store]);
     }),
     // Сортировка
     onSort: useCallback(

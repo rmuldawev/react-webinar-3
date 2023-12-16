@@ -8,7 +8,8 @@ import Head from "../../components/head";
 import CatalogFilter from "../../containers/catalog-filter";
 import CatalogList from "../../containers/catalog-list";
 import LocaleSelect from "../../containers/locale-select";
-import SingIn from "../../components/sing-in";
+import UserHeader from "../../components/sing-in/index.js";
+
 import useSelector from "../../hooks/use-selector";
 
 /**
@@ -17,6 +18,10 @@ import useSelector from "../../hooks/use-selector";
 function Main() {
   const auth = localStorage.getItem("accessToken");
   const store = useStore();
+  const select = useSelector((state) => ({
+    isAuth: state.user.isAuth,
+    user: state.user.user,
+  }));
 
   useInit(
     () => {
@@ -38,7 +43,12 @@ function Main() {
 
   return (
     <PageLayout>
-      <SingIn title="Вход" isAuth={auth} onClick={handleLogout} />
+      <UserHeader
+        title="Вход"
+        isAuth={auth}
+        onClick={handleLogout}
+        user={select.user}
+      />
       <Head title={t("title")}>
         <LocaleSelect />
       </Head>

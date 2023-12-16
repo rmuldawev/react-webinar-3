@@ -15,6 +15,7 @@ const Login = () => {
   const store = useStore();
   const { t } = useTranslate();
   const auth = localStorage.getItem("accessToken");
+  console.log("authauth", auth);
 
   const methods = useForm({
     mode: "onChange",
@@ -43,6 +44,7 @@ const Login = () => {
   const handleLogout = async () => {
     try {
       await store.actions.user.logout(auth);
+      console.log("Токен удален");
     } catch (error) {
       console.error("Ошибка при удалении токена:", error);
     }

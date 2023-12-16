@@ -85,10 +85,12 @@ class UserAuth extends StoreModule {
 
   async logout(token) {
     try {
+      console.log("Выход вызван с токеном:", token);
       if (!token) {
-        throw new Error("Токен отсутствует");
+        console.warn("Токен равен null. Возможно, он уже был удален.");
+        return; // выход, если токен равен null
       }
-
+  
       const response = await fetch("/api/v1/users/sign", {
         method: "DELETE",
         headers: {
@@ -96,17 +98,16 @@ class UserAuth extends StoreModule {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.ok) {
+        localStorage.removeItem("accessToken");
         this.setState(
           {
-            ...this.getState(),
             isAuth: false,
             user: null,
           },
           "Выход успешен"
         );
-        localStorage.removeItem("accessToken");
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Ошибка при выходе");
@@ -116,6 +117,8 @@ class UserAuth extends StoreModule {
       throw new Error("Ошибка при выходе");
     }
   }
+  
+  
 }
 
 export default UserAuth;
