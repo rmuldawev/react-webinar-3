@@ -78,8 +78,8 @@ class UserAuth extends StoreModule {
         throw new Error(errorData.message || "Ошибка авторизации");
       }
     } catch (error) {
-      console.error("Ошибка в процессе авторизации:", error.message);
-      throw new Error("Ошибка в процессе авторизации");
+      console.error("Не правильный логин или пароль:", error.message);
+      throw new Error("Не правильный логин или пароль");
     }
   }
 
@@ -90,7 +90,7 @@ class UserAuth extends StoreModule {
         console.warn("Токен равен null. Возможно, он уже был удален.");
         return; // выход, если токен равен null
       }
-  
+
       const response = await fetch("/api/v1/users/sign", {
         method: "DELETE",
         headers: {
@@ -98,7 +98,7 @@ class UserAuth extends StoreModule {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.ok) {
         localStorage.removeItem("accessToken");
         this.setState(
@@ -117,8 +117,6 @@ class UserAuth extends StoreModule {
       throw new Error("Ошибка при выходе");
     }
   }
-  
-  
 }
 
 export default UserAuth;

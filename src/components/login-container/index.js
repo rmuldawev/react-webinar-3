@@ -1,8 +1,10 @@
+import React from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import CustomInput from "../input-field";
-import { Link } from "react-router-dom";
+import CustomInput from "../input-field/index.js";
+import "../login-container/styles.css";
 
-const LoginContainer = ({ onLogin }) => {
+const LoginContainer = ({ onLogin, error }) => {
   const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
@@ -20,16 +22,21 @@ const LoginContainer = ({ onLogin }) => {
   return (
     <div style={{ paddingLeft: "20px" }}>
       <h1>Вход</h1>
+      {error && <p className="errorMessage">{error.message}</p>}
       <CustomInput name={"login"} title={"Логин"} control={control} />
       <CustomInput name={"password"} title={"Пароль"} control={control} />
-      {/* <Link to='/profile'> */}
-        <button style={{ marginTop: "1px" }} onClick={handleSubmit(onSubmit)}>
-          Войти
-        </button>
-      {/* </Link> */}
-
+      <button style={{ marginTop: "1px" }} onClick={handleSubmit(onSubmit)}>
+        Войти
+      </button>
     </div>
   );
 };
 
-export default LoginContainer;
+LoginContainer.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    message: PropTypes.string.isRequired,
+  }),
+};
+
+export default React.memo(LoginContainer);

@@ -13,18 +13,18 @@ import useStore from "../hooks/use-store";
  * Маршрутизация по страницам и модалкам
  */
 function App() {
-  const store = useStore()
+  const store = useStore();
   const activeModal = useSelector((state) => state.modals.name);
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,
     token: state.user.token,
     user: state.user.user,
   }));
-  console.log('authdasdasdasdasd', select.isAuth)
+  console.log("authdasdasdasdasd", select.isAuth);
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem("accessToken");
-      if(token){
+      if (token) {
         await store.actions.user.getUserInfo(token);
       }
     };
@@ -35,22 +35,12 @@ function App() {
   return (
     <>
       <Routes>
-        {select.isAuth  ? (
-          <>
-            <Route path={""} element={<Main />} />
-            <Route path={"/articles/:id"} element={<Article />} />
-            <Route path={"/singin"} element={<Login />} />
-            <Route  path="/profile" element={<Profile/>}/>
-          </>
-        ) : (
-          <>
-            <Route path={"/singin"} element={<Login />} />
-            <Route path={"/articles/:id"} element={<Article />} />
-            <Route path={""} element={<Main />} />
-            <Route  path="/profile" element={<Profile/>}/>
-
-          </>
-        )}
+        <>
+          <Route path={""} element={<Main />} />
+          <Route path={"/articles/:id"} element={<Article />} />
+          <Route path={"/login"} element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+        </>
       </Routes>
 
       {activeModal === "basket" && <Basket />}

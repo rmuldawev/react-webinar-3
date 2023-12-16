@@ -1,30 +1,29 @@
+import {memo, useCallback} from "react"
 import { FormProvider, useForm } from "react-hook-form";
 import Head from "../../components/head";
-import LoginContainer from "../../components/login-container.js";
 import PageLayout from "../../components/page-layout";
-import SingIn from "../../components/sing-in";
 import LocaleSelect from "../../containers/locale-select";
 import Navigation from "../../containers/navigation";
 import useTranslate from "../../hooks/use-translate";
 import useStore from "../../hooks/use-store.js";
 import useSelector from "../../hooks/use-selector.js";
+import UserHeader from "../../components/sing-in/index.js";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import LoginContainer from "../../components/login-container/index.js";
 
 const Login = () => {
   const navigate = useNavigate();
   const store = useStore();
   const { t } = useTranslate();
   const auth = localStorage.getItem("accessToken");
+  const [error, setError] = useState(null)
   console.log("authauth", auth);
 
   const methods = useForm({
     mode: "onChange",
   });
 
-  // const {
-  //   formState: { isValid, errors },
-  //   getValues,
-  // } = methods;
 
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,
@@ -32,28 +31,32 @@ const Login = () => {
     user: state.user.user,
   }));
 
-  const handleLogin = async (login, password) => {
-    try {
-      await store.actions.user.login(login, password);
-      navigate("/profile");
-    } catch (error) {
-      console.error("Ошибка авторизации", error);
-    }
-  };
+  const handleLogin = useCallback(
+    async (login, password) => {
+      try {
+        await store.actions.user.login(login, password);
+        navigate("/profile");
+      } catch (error) {
+        console.error("Ошибка авторизации", error);
+        setError(error);
+      }
+    },
+    [store.actions.user, navigate]
+  );
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await store.actions.user.logout(auth);
       console.log("Токен удален");
     } catch (error) {
       console.error("Ошибка при удалении токена:", error);
     }
-  };
+  }, [store.actions.user, auth]);
 
   return (
     <FormProvider {...methods}>
       <PageLayout>
-        <SingIn
+        <UserHeader
           title={t("Вход")}
           isAuth={auth}
           user={select.user}
@@ -63,10 +66,10 @@ const Login = () => {
           <LocaleSelect />
         </Head>
         <Navigation />
-        <LoginContainer onLogin={handleLogin} />
+        <LoginContainer onLogin={handleLogin} error={error} />
       </PageLayout>
     </FormProvider>
   );
 };
 
-export default Login;
+export default memo(Login);
