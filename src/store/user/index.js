@@ -1,94 +1,63 @@
 import StoreModule from "../module";
-import { useNavigate } from "react-router-dom";
 
 class UserAuth extends StoreModule {
   initState() {
     return {
-      isAuth: false,
+      isAuth: null,
+      token: null,
+      authError: null,
       user: null,
     };
   }
 
-  async getUserInfo(token) {
-    try {
-      if (!token) {
-        throw new Error("Токен отсутствует");
-      }
-
-      const response = await fetch("/api/v1/users/self?fields=*", {
-        method: "GET",
-        headers: {
-          "X-Token": token,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        console.log("userData", userData.result);
-        this.setState({
-          user: userData.result,
-          isAuth: true,
-        });
-      } else {
-        const errorData = await response.json();
-        console.error(
-          "Ошибка при получении данных пользователя:",
-          errorData.message
-        );
-        throw new Error(
-          errorData.message || "Ошибка при получении данных пользователя"
-        );
-      }
-    } catch (error) {
-      console.error("Ошибка при получении данных пользователя:", error.message);
-      throw new Error("Ошибка при получении данных пользователя");
-    }
-  }
-
   async login(login, password) {
-    try {
-      const response = await fetch("/api/v1/users/sign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const response = await fetch("/api/v1/users/sign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        login: login,
+        password: password,
+        remember: true,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      this.setState(
+        {
+          isAuth: true,
+          user: data.result.user,
+          token: data.result.token,
         },
-        body: JSON.stringify({
-          login: login,
-          password: password,
-          remember: true,
-        }),
-      });
-      console.log("response", response);
-      if (response.ok) {
-        const data = await response.json();
-        console.log("data", data);
-        this.setState(
-          {
-            isAuth: true,
-            user: data.result.user,
-          },
-          "Авторизация успешна"
-        );
-        if (data.result.token) {
-          localStorage.setItem("accessToken", data.result.token);
-        }
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Ошибка авторизации");
+        "Авторизация успешна"
+      );
+
+      if (data.result.token) {
+        localStorage.setItem("accessToken", data.result.token);
       }
-    } catch (error) {
-      console.error("Не правильный логин или пароль:", error.message);
-      throw new Error("Не правильный логин или пароль");
+    } else {
+      const errorData = await response.json();
+      console.log(errorData);
+      this.setState({
+        authError:
+          errorData.error.data.issues[0].message || "Ошибка авторизации",
+      });
+      throw new Error("Ошибка авторизации");
     }
   }
 
-  async logout(token) {
+  getAuthError() {
+    return this.getState().authError;
+  }
+
+  async logout() {
+    const token = localStorage.getItem("accessToken");
     try {
-      console.log("Выход вызван с токеном:", token);
       if (!token) {
         console.warn("Токен равен null. Возможно, он уже был удален.");
-        return; // выход, если токен равен null
+        return;
       }
 
       const response = await fetch("/api/v1/users/sign", {
@@ -116,6 +85,30 @@ class UserAuth extends StoreModule {
       console.error("Ошибка при выходе:", error.message);
       throw new Error("Ошибка при выходе");
     }
+  }
+
+  async autoLogin() {
+    const token = localStorage.getItem("accessToken");
+
+    if (token === null) {
+      return;
+    }
+
+    const response = await fetch(`/api/v1/users/self`, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-Token": token,
+      },
+    });
+
+    const res = await response.json();
+    console.log("dsdsd", res);
+
+    this.setState({
+      isAuth: true,
+      user: res.result,
+    });
   }
 }
 

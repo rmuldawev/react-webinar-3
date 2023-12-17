@@ -22,10 +22,16 @@ const LoginContainer = ({ onLogin, error }) => {
   return (
     <div style={{ paddingLeft: "20px" }}>
       <h1>Вход</h1>
-      {error && <p className="errorMessage">{error.message}</p>}
+      {/* {error && <p className="errorMessage">{error}</p>} */}
+      <div style={{marginBottom:20}}>
+
       <CustomInput name={"login"} title={"Логин"} control={control} />
+      </div>
+
       <CustomInput name={"password"} title={"Пароль"} control={control} />
-      <button style={{ marginTop: "1px" }} onClick={handleSubmit(onSubmit)}>
+      {error && <p className="errorMessage">{error}</p>}
+
+      <button style={{ marginTop: "20px" }} onClick={handleSubmit(onSubmit)}>
         Войти
       </button>
     </div>
@@ -34,9 +40,7 @@ const LoginContainer = ({ onLogin, error }) => {
 
 LoginContainer.propTypes = {
   onLogin: PropTypes.func.isRequired,
-  error: PropTypes.shape({
-    message: PropTypes.string.isRequired,
-  }),
+  error: PropTypes.string, // Изменили PropTypes
 };
 
 export default React.memo(LoginContainer);

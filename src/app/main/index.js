@@ -16,7 +16,6 @@ import useSelector from "../../hooks/use-selector";
  * Главная страница - первичная загрузка каталога
  */
 function Main() {
-  const auth = localStorage.getItem("accessToken");
   const store = useStore();
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,
@@ -35,7 +34,7 @@ function Main() {
 
   const handleLogout = async () => {
     try {
-      await store.actions.user.logout(auth);
+      await store.actions.user.logout();
     } catch (error) {
       console.error("Ошибка при удалении токена:", error);
     }
@@ -45,7 +44,7 @@ function Main() {
     <PageLayout>
       <UserHeader
         title="Вход"
-        isAuth={auth}
+        isAuth={select.isAuth}
         onClick={handleLogout}
         user={select.user}
       />

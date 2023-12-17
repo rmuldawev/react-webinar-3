@@ -1,4 +1,4 @@
-import {memo, useCallback} from "react"
+import { memo, useCallback, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Head from "../../components/head";
 import PageLayout from "../../components/page-layout";
@@ -16,20 +16,18 @@ const Login = () => {
   const navigate = useNavigate();
   const store = useStore();
   const { t } = useTranslate();
-  const auth = localStorage.getItem("accessToken");
-  const [error, setError] = useState(null)
-  console.log("authauth", auth);
+  const [authError, setAuthError] = useState(null);
 
   const methods = useForm({
     mode: "onChange",
   });
 
-
   const select = useSelector((state) => ({
     isAuth: state.user.isAuth,
-    token: state.user.token,
     user: state.user.user,
+    error: state.user.authError,
   }));
+  console.log("select.isAuth", select.isAuth);
 
   const handleLogin = useCallback(
     async (login, password) => {
@@ -38,7 +36,7 @@ const Login = () => {
         navigate("/profile");
       } catch (error) {
         console.error("Ошибка авторизации", error);
-        setError(error);
+        setAuthError(store.actions.user.getAuthError());
       }
     },
     [store.actions.user, navigate]
@@ -46,19 +44,24 @@ const Login = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      await store.actions.user.logout(auth);
-      console.log("Токен удален");
+      await store.actions.user.logout();
     } catch (error) {
       console.error("Ошибка при удалении токена:", error);
     }
-  }, [store.actions.user, auth]);
+  }, [store.actions.user]);
+
+  useEffect(() => {
+    if (select.isAuth === true) {
+      navigate("/");
+    }
+  }, [select.isAuth]);
 
   return (
     <FormProvider {...methods}>
       <PageLayout>
         <UserHeader
           title={t("Вход")}
-          isAuth={auth}
+          isAuth={select.isAuth}
           user={select.user}
           onClick={handleLogout}
         />
@@ -66,7 +69,7 @@ const Login = () => {
           <LocaleSelect />
         </Head>
         <Navigation />
-        <LoginContainer onLogin={handleLogin} error={error} />
+        <LoginContainer onLogin={handleLogin} error={authError} />
       </PageLayout>
     </FormProvider>
   );

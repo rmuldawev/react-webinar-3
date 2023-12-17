@@ -5,6 +5,7 @@ import useSelector from "../../hooks/use-selector";
 import Select from "../../components/select";
 import Input from "../../components/input";
 import SideLayout from "../../components/side-layout";
+import { convertToTree, getOptions } from "../../utils";
 
 /**
  * Контейнер со всеми фильтрами каталога
@@ -12,13 +13,19 @@ import SideLayout from "../../components/side-layout";
 function CatalogFilter() {
   const store = useStore();
 
+  useEffect(() => {
+     store.actions.categories.fetchCategories();
+  }, [store.actions.categories]);
+
   const select = useSelector((state) => ({
     sort: state.catalog.params.sort,
     query: state.catalog.params.query,
     category: state.catalog.params.category,
-    categories: state.catalog.categories,
+    categories: state.categories.categories,
+    // categories: [{title:'Все', id: 'All'},...state.categories.categories.map(category => ({...category, value:category.id}))]
   }));
-  console.log("categories", select.categories);
+
+  console.log('select.categories', select.categories)
 
   const callbacks = {
     // Категории

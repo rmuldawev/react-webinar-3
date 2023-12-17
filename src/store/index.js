@@ -59,8 +59,8 @@ class Store {
       `color: ${'#777'}; font-weight: normal`,
       `color: ${'#333'}; font-weight: bold`,
     );
-    console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
-    console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
+    // console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
+    // console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
     console.groupEnd();
 
     this.state = newState;

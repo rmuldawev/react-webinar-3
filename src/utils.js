@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 /**
  * Плюрализация
  * Возвращает вариант с учётом правил множественного числа под указанную локаль
@@ -33,3 +35,52 @@ export function codeGenerator(start = 0) {
 export function numberFormat(value, locale = "ru-RU", options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
+
+export const convertCategories = (categories) => {
+  const categoryArr = new Map();
+
+  categories.forEach((category) => {
+    categoryArr.set(category._id, { ...category, children: [] });
+  });
+
+  const treesArr = [];
+  categoryArr.forEach((category) => {
+    if (category.parent) {
+      categoryArr.get(category.parent._id).children.push(category);
+    } else {
+      treesArr.push(category);
+    }
+  });
+
+  return treesArr;
+};
+
+export const modifiedCategories = (categoriesTreesArray) => {
+  const getNested = (tree, options = [], nesting = "") => {
+    const category = {
+      title: nesting + tree.title,
+      value: tree._id,
+      key: tree._id,
+    };
+
+    if (tree.children.length > 0) {
+      for (const child of tree.children) {
+        options.push(getNested(child, [], " - " + nesting));
+      }
+      return [category, ...options];
+    } else {
+      return [category];
+    }
+  };
+
+  let options = [];
+  for (let tree of categoriesTreesArray) {
+    options.push(getNested(tree));
+  }
+
+  while (options.some((option) => Array.isArray(option))) {
+    options = options.flat();
+  }
+
+  return options;
+};

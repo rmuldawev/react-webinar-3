@@ -32,63 +32,7 @@ class CatalogState extends StoreModule {
    */
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
-    const res = await fetchCategories().then((response) => {
-      return response.result.items;
-    });
-    const categories = [
-      { title: "Все", value: "All", parent: null },
-      ...res.map((e) => {
-        return { title: e.title, value: e._id, parent: e.parent };
-      }),
-    ];
-    console.log(categories);
 
-    function buildSortedHierarchyWithDashes(
-      data,
-      parentValue = null,
-      prefix = ""
-    ) {
-      const result = [];
-
-      for (const item of data) {
-        const parentId = item.parent ? item.parent._id : null;
-        if (parentId === parentValue) {
-          const children = buildSortedHierarchyWithDashes(
-            data,
-            item.value,
-            prefix + "-"
-          );
-          if (children.length > 0) {
-            item.children = children;
-          }
-          item.title = prefix + item.title;
-          result.push(item);
-        }
-      }
-
-      return result.sort((a, b) => a.value - b.value);
-    }
-
-    const sortedHierarchyWithDashes =
-      buildSortedHierarchyWithDashes(categories);
-
-    const transformedArray = [];
-    const traverse = (item) => {
-      transformedArray.push({ ...item, children: undefined });
-      if (item.children) {
-        for (const child of item.children) {
-          traverse(child);
-        }
-      }
-    };
-
-    for (const item of sortedHierarchyWithDashes) {
-      traverse(item);
-    }
-
-    console.log("transformedArray", transformedArray);
-
-    this.setState({ ...this.getState(), categories: transformedArray });
     let validParams = {};
     if (urlParams.has("page"))
       validParams.page = Number(urlParams.get("page")) || 1;
@@ -174,20 +118,3 @@ class CatalogState extends StoreModule {
 }
 
 export default CatalogState;
-
-export const fetchCategories = async () => {
-  try {
-    const response = await fetch(
-      "/api/v1/categories?fields=_id,title,parent(_id)&limit=*"
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch categories");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error;
-  }
-};

@@ -7,33 +7,27 @@ import useStore from "../../hooks/use-store.js";
 import useSelector from "../../hooks/use-selector.js";
 import { useEffect } from "react";
 import ProfileCard from "../../components/profile-card/index.js";
-import { useNavigate } from "react-router-dom";
 import UserHeader from "../../components/sing-in/index.js";
 
 const Profile = () => {
   const store = useStore();
   const { t } = useTranslate();
-  const navigate = useNavigate();
-  const auth = localStorage.getItem("accessToken");
 
   const select = useSelector((state) => ({
-    isAuth: state.user.isAuth,
-    user: state.user.user,
+    isAuth: state.userInfo.isAuth,
+    user: state.userInfo.user,
   }));
 
-  console.log("select.user", select.user);
-  console.log("authtoken", auth);
-
   useEffect(() => {
-    if (!auth) {
-      navigate("/singin");
-    }
-  }, []);
+    const fetchUserData = async () => {
+      store.actions.userInfo.fetchUserInfo();
+    };
+    fetchUserData();
+  }, [store.actions.userInfo]);
 
   const handleLogout = async () => {
     try {
       await store.actions.user.logout(auth);
-      console.log("Токен удален");
     } catch (error) {
       console.error("Ошибка при удалении токена:", error);
     }
