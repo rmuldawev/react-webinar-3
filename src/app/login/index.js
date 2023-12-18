@@ -27,7 +27,6 @@ const Login = () => {
     user: state.user.user,
     error: state.user.authError,
   }));
-  console.log("select.isAuth", select.isAuth);
 
   const handleLogin = useCallback(
     async (login, password) => {
@@ -52,7 +51,7 @@ const Login = () => {
 
   useEffect(() => {
     if (select.isAuth === true) {
-      navigate("/");
+      navigate("/profile");
     }
   }, [select.isAuth]);
 

@@ -24,15 +24,6 @@ class UserInfo extends StoreModule {
         user: userData.result,
         isAuth: true,
       });
-    } else {
-      const errorData = await response.json();
-      console.error(
-        "Ошибка при получении данных пользователя:",
-        errorData.message
-      );
-      throw new Error(
-        errorData.message || "Ошибка при получении данных пользователя"
-      );
     }
   }
 }

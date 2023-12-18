@@ -20,7 +20,6 @@ class CatalogState extends StoreModule {
       },
       count: 0,
       waiting: false,
-      categories: [],
     };
   }
 

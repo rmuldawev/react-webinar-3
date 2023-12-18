@@ -21,11 +21,9 @@ const LoginContainer = ({ onLogin, error }) => {
 
   return (
     <div style={{ paddingLeft: "20px" }}>
-      <h1>Вход</h1>
-      {/* {error && <p className="errorMessage">{error}</p>} */}
-      <div style={{marginBottom:20}}>
-
-      <CustomInput name={"login"} title={"Логин"} control={control} />
+      <h1 className="containerTitle">Вход</h1>
+      <div style={{ marginBottom: 20 }}>
+        <CustomInput name={"login"} title={"Логин"} control={control} />
       </div>
 
       <CustomInput name={"password"} title={"Пароль"} control={control} />
