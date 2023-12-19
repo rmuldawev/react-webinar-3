@@ -1,0 +1,60 @@
+// actions.js
+export default {
+  // ... другие экшены
+
+  /**
+   * Создание нового комментария
+   * @param {Object} commentData - Данные нового комментария
+   * @return {Function}
+   */
+  createComment: (commentData) => {
+    return async (dispatch, getState, services) => {
+      dispatch({ type: "comment/create-start" });
+
+      try {
+        const res = await services.api.request({
+          method: "POST",
+          url: "/api/v1/comments",
+          data: commentData, 
+        });
+
+        dispatch({
+          type: "comment/create-success",
+          payload: { data: res.data.result },
+        });
+        console.log('Успех')
+      } catch (e) {
+        console.error('Облом')
+        dispatch({
+          type: "comment/create-error",
+          payload: { error: e.message },
+        });
+      }
+    };
+  },
+
+  getComments: (parentId) => {
+    return async (dispatch, getState, services) => {
+      dispatch({ type: "comment/get-start" });
+
+      try {
+        const res = await services.api.request({
+          method: "GET",
+          url: `/api/v1/comments?fields=items(_id,text,dateCreate,author(profile(name)),parent(_id,_type),isDeleted),count&limit=*&search[parent]=${parentId}`,
+        });
+        console.log('Ответ' ,res.data.result)
+
+        dispatch({
+          type: "comment/get-success",
+          payload: { data: res.data.result },
+        });
+      } catch (e) {
+        console.error('Облом при получении комментариев', e.message);
+        dispatch({
+          type: "comment/get-error",
+          payload: { error: e.message },
+        });
+      }
+    };
+  },
+};

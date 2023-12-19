@@ -1,0 +1,31 @@
+.Comment-container {
+  display: flex;
+  flex-direction: column;
+  margin: 30px 40px 0 40px;
+}
+
+.Comment-title {
+  color: #000;
+  font-family: Arial;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0 0 10px 0;
+}
+
+.input-field {
+  width: 944px;
+  height: 76px;
+  flex-shrink: 0;
+  border: 1px solid #666;
+  background: #fff;
+  box-shadow: 0px 1px 4px 0px rgba(102, 102, 102, 0.1) inset;
+}
+
+.Comment-button {
+  margin: 10px 0 0 0;
+  width: 90px;
+  height: 21px;
+  flex-shrink: 0;
+}
