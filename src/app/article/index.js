@@ -1,5 +1,5 @@
-import { memo, useCallback, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { memo, useCallback, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import useStore from "../../hooks/use-store";
 import useTranslate from "../../hooks/use-translate";
 import useInit from "../../hooks/use-init";
@@ -13,64 +13,70 @@ import TopHead from "../../containers/top-head";
 import { useDispatch, useSelector } from "react-redux";
 import shallowequal from "shallowequal";
 import articleActions from "../../store-redux/article/actions";
-import Comment from "../../components/comment";
 import newComment from "../../store-redux/comment/actions";
-import {useSelector as useSelectorRedux} from 'react-redux';
-import treeToList from "../../utils/tree-to-list";
-
+import CommentForm from "../../components/comment";
+import renderComments from "../../components/render-comments";
+import { transformComments } from "../../utils/transform-comments";
+import LinkToLoginPage from "../../components/link-to-login";
 
 function Article() {
   const store = useStore();
-  // const comments = useSelector(getComments);
-  // console.log('comments', comments)
+  const token = store.getState().session.token;
+  const [parentCommentId, setParentCommentId] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(!!token);
+
+  useEffect(() => {
+    setIsUserLoggedIn(!!token);
+  }, [token]);
 
   const dispatch = useDispatch();
-  // Параметры из пути /articles/:id
 
   const params = useParams();
 
   useInit(() => {
-    //store.actions.article.load(params.id);
+    store.actions.article.load(params.id);
     dispatch(articleActions.load(params.id));
-   const res =  dispatch(newComment.getComments(params.id));
-   console.log('res',res)
+    dispatch(newComment.getComments(params.id));
   }, [params.id]);
-  console.log(newComment)
 
   const select = useSelector(
     (state) => ({
       article: state.article.data,
       waiting: state.article.waiting,
-      comments: [...treeToList(state.newComment.comments)],
-
-      // ...treeToList(listToTree(state.newComment.comments)
+      comments: state.newComment.comments,
+      isAuth: state,
     }),
     shallowequal
-  ); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
-  console.log('комменты',select.comments)
+  );
+
+  const transformedComments = transformComments(select.comments);
 
   const { t } = useTranslate();
 
   const callbacks = {
-    // Добавление в корзину
     addToBasket: useCallback(
       (_id) => store.actions.basket.addToBasket(_id),
       [store]
     ),
   };
 
+  const handleReplyClick = useCallback((commentId) => {
+    setParentCommentId(commentId);
+  }, []);
+
   const handleCommentSubmit = useCallback(
-    (commentData) => {
-      dispatch(
-        newComment.createComment({
-          text: commentData.text,
-          _id: params.id,
-          type: "article",
-        })
-      );
+    (text) => {
+      const parentType = parentCommentId ? "comment" : "article";
+      const parentId = parentCommentId || select.article._id;
+      dispatch(newComment.createComment(text, parentId, parentType));
+      setParentCommentId(null);
     },
-    [dispatch, params.id]
+    [dispatch, parentCommentId, select.article._id]
   );
+
+  const handleCancelReply = useCallback(() => {
+    setParentCommentId(null);
+  }, []);
 
   return (
     <PageLayout>
@@ -86,14 +92,26 @@ function Article() {
           t={t}
         />
       </Spinner>
-      {select.comments && select.comments.map((e,i) => {
-        return (
-          <p key={i}>{e.text}</p>
-        )
-      })}
-
-      <Comment onCommentSubmit={handleCommentSubmit} />
-      
+      <div style={{ marginLeft: 40 }}>
+        {select.comments && <p>Комментарии ({select.comments.length})</p>}
+        {renderComments(
+          transformedComments,
+          0,
+          parentCommentId,
+          handleReplyClick,
+          handleCommentSubmit,
+          handleCancelReply
+        )}
+      </div>
+      {!parentCommentId && isUserLoggedIn ? (
+        <CommentForm
+          onCommentSubmit={handleCommentSubmit}
+          parentCommentId={parentCommentId}
+          isUserLoggedIn={isUserLoggedIn}
+        />
+      ) : (
+        <LinkToLoginPage />
+      )}
     </PageLayout>
   );
 }

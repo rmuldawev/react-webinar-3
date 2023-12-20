@@ -1,0 +1,62 @@
+/* button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  } */
+
+
+.Comment {
+  margin: 0 0 30px 0;
+}
+
+.Comment-title-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.Comment-name {
+  color: #000;
+  font-family: Arial;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0 10px 0 0;
+}
+
+.Comment-date {
+  color: #666;
+  font-family: Arial;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}
+
+.Comment-text {
+  color: #000;
+  font-family: Arial;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 10px 0 10px 0;
+}
+
+.Comment-answer {
+  color: #0087e9;
+  font-family: Arial;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+}

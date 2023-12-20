@@ -7,24 +7,34 @@ export default {
    * @param {Object} commentData - Данные нового комментария
    * @return {Function}
    */
-  createComment: (commentData) => {
+  createComment: (text, parentId, parentType) => {
     return async (dispatch, getState, services) => {
       dispatch({ type: "comment/create-start" });
-
       try {
+       const body = {
+          text: text,
+          parent: {
+            _id: parentId,
+            _type: parentType,
+          },
+        };
+        const jsonStr = JSON.stringify(body);
+        console.log("jsonStr", jsonStr);
         const res = await services.api.request({
           method: "POST",
-          url: "/api/v1/comments",
-          data: commentData, 
+          url: `/api/v1/comments?fields=id,text,dateCreate,author(profile(name)),parent(_id,_type),isDeleted`,
+          body: jsonStr,
         });
+
+        console.log("res", res);
 
         dispatch({
           type: "comment/create-success",
           payload: { data: res.data.result },
         });
-        console.log('Успех')
+        console.log("Успех");
       } catch (e) {
-        console.error('Облом')
+        console.error("Облом");
         dispatch({
           type: "comment/create-error",
           payload: { error: e.message },
@@ -42,14 +52,13 @@ export default {
           method: "GET",
           url: `/api/v1/comments?fields=items(_id,text,dateCreate,author(profile(name)),parent(_id,_type),isDeleted),count&limit=*&search[parent]=${parentId}`,
         });
-        console.log('Ответ' ,res.data.result)
 
         dispatch({
           type: "comment/get-success",
           payload: { data: res.data.result },
         });
       } catch (e) {
-        console.error('Облом при получении комментариев', e.message);
+        console.error("Облом при получении комментариев", e.message);
         dispatch({
           type: "comment/get-error",
           payload: { error: e.message },
