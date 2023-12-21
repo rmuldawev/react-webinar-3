@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useStore from "../../hooks/use-store";
 import useTranslate from "../../hooks/use-translate";
 import useInit from "../../hooks/use-init";
@@ -16,17 +16,16 @@ import shallowequal from "shallowequal";
 import articleActions from "../../store-redux/article/actions";
 import newComment from "../../store-redux/comment/actions";
 import CommentForm from "../../components/comment";
-import renderComments from "../../components/render-comments";
 import { transformComments } from "../../utils/transform-comments";
 import LinkToLoginPage from "../../components/link-to-login";
 import useSelector from "../../hooks/use-selector";
+import RenderComments from "../../components/render-comments";
 
 function Article() {
   const store = useStore();
   const [parentCommentId, setParentCommentId] = useState(null);
   const isUserLoggedIn = useSelector((state) => !!state.session.token);
-  const currentUserId = useSelector((state) => state.session.user._id) 
-
+  const currentUserId = useSelector((state) => state.session.user._id);
 
   const dispatch = useDispatch();
 
@@ -46,9 +45,9 @@ function Article() {
     }),
     shallowequal
   );
-  console.log(select.comments)
 
   const transformedComments = transformComments(select.comments);
+  console.log("transformedComments", transformedComments);
 
   const { t } = useTranslate();
 
@@ -78,9 +77,9 @@ function Article() {
     [dispatch, parentCommentId, select.article._id]
   );
 
-  const handleCancelReply = useCallback(() => {
+  const handleCancelReply = () => {
     setParentCommentId(null);
-  }, []);
+  };
 
   return (
     <PageLayout>
@@ -98,14 +97,16 @@ function Article() {
       </Spinner>
       <div style={{ marginLeft: 40 }}>
         {select.comments && <p>Комментарии ({select.comments.length})</p>}
-        {renderComments(
-          transformedComments,
-          0,
-          parentCommentId,
-          handleReplyClick,
-          handleCommentSubmit,
-          handleCancelReply
-        )}
+        <RenderComments
+          comments={transformedComments}
+          currentUserId={currentUserId}
+          depth={0}
+          parentCommentId={parentCommentId}
+          onReplyClick={handleReplyClick}
+          onCommentSubmit={handleCommentSubmit}
+          onCancelReply={handleCancelReply}
+          isUserLoggedIn={isUserLoggedIn}
+        />
       </div>
       {!parentCommentId && isUserLoggedIn ? (
         <CommentForm
@@ -113,11 +114,8 @@ function Article() {
           parentCommentId={parentCommentId}
           isUserLoggedIn={isUserLoggedIn}
         />
-      ) : (
-        null
-      )}
-       {!isUserLoggedIn && <LinkToLoginPage />}
-
+      ) : null}
+      {!isUserLoggedIn && <LinkToLoginPage />}
     </PageLayout>
   );
 }

@@ -1,39 +1,56 @@
-import React from "react";
-import { formatDate } from "../../utils/date-format";
+import React from 'react';
 import CommentContainer from "../comment-container";
 import CommentForm from "../comment";
+import { formatDate } from '../../utils/date-format';
 
-const renderComments = (comments, depth = 0, parentCommentId, handleReplyClick, handleCommentSubmit, onCancelReply, isUserLoggedIn) => {
-  console.log('comments',comments)
+const RenderComments = ({ 
+  comments, 
+  currentUserId, 
+  depth = 0, 
+  parentCommentId, 
+  onReplyClick, 
+  onCommentSubmit, 
+  onCancelReply, 
+  isUserLoggedIn 
+}) => {
   return (
     <>
-      {comments.map((comment) => (
-        <div
-          key={comment._id}
-          style={{ marginLeft: `${depth * 30}px`, paddingLeft: "10px" }}
-        >
+      {comments.map((comment) => {
+        return (
+          <div key={comment._id} style={{ marginLeft: `${depth * 30}px`, paddingLeft: "10px" }}>
           <CommentContainer
-            name={comment.author.profile.name && comment.author.profile.name}
-            dateUpdate={formatDate(
-              comment.dateUpdate ? comment.dateUpdate : comment.dateCreate
-            )}
+            name={comment.author.profile.name}
+            dateUpdate={formatDate(comment.dateCreate)}
             text={comment.text}
-            onReplyClick={() => handleReplyClick(comment._id)}
+            onReplyClick={() => onReplyClick(comment._id)}
+            isAuthor={comment.author._id === currentUserId}
           />
-          {comment.children &&
-            comment.children.length > 0 &&
-            renderComments(comment.children, depth + 1, parentCommentId, handleReplyClick, handleCommentSubmit, onCancelReply, isUserLoggedIn)}
-          {parentCommentId === comment._id && (
-            <CommentForm
-              onCommentSubmit={handleCommentSubmit}
+          {comment.children && comment.children.length > 0 && (
+            <RenderComments
+              comments={comment.children}
+              currentUserId={currentUserId}
+              depth={depth + 1}
               parentCommentId={parentCommentId}
+              onReplyClick={onReplyClick}
+              onCommentSubmit={onCommentSubmit}
               onCancelReply={onCancelReply}
               isUserLoggedIn={isUserLoggedIn}
             />
           )}
+          {parentCommentId === comment._id && isUserLoggedIn && (
+            <CommentForm
+              onCommentSubmit={onCommentSubmit}
+              parentCommentId={parentCommentId}
+              isUserLoggedIn={isUserLoggedIn}
+              onCancelReply={onCancelReply} 
+
+            />
+          )}
         </div>
-      ))}
+        )
+      })}
     </>
   );
 };
-export default renderComments;
+
+export default RenderComments;
