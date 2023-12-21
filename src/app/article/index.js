@@ -10,7 +10,8 @@ import Spinner from "../../components/spinner";
 import ArticleCard from "../../components/article-card";
 import LocaleSelect from "../../containers/locale-select";
 import TopHead from "../../containers/top-head";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useSelector as useSelectorRedux } from "react-redux";
 import shallowequal from "shallowequal";
 import articleActions from "../../store-redux/article/actions";
 import newComment from "../../store-redux/comment/actions";
@@ -18,16 +19,14 @@ import CommentForm from "../../components/comment";
 import renderComments from "../../components/render-comments";
 import { transformComments } from "../../utils/transform-comments";
 import LinkToLoginPage from "../../components/link-to-login";
+import useSelector from "../../hooks/use-selector";
 
 function Article() {
   const store = useStore();
-  const token = store.getState().session.token;
   const [parentCommentId, setParentCommentId] = useState(null);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(!!token);
+  const isUserLoggedIn = useSelector((state) => !!state.session.token);
+  const currentUserId = useSelector((state) => state.session.user._id) 
 
-  useEffect(() => {
-    setIsUserLoggedIn(!!token);
-  }, [token]);
 
   const dispatch = useDispatch();
 
@@ -39,15 +38,15 @@ function Article() {
     dispatch(newComment.getComments(params.id));
   }, [params.id]);
 
-  const select = useSelector(
+  const select = useSelectorRedux(
     (state) => ({
       article: state.article.data,
       waiting: state.article.waiting,
       comments: state.newComment.comments,
-      isAuth: state,
     }),
     shallowequal
   );
+  console.log(select.comments)
 
   const transformedComments = transformComments(select.comments);
 
@@ -60,9 +59,14 @@ function Article() {
     ),
   };
 
-  const handleReplyClick = useCallback((commentId) => {
-    setParentCommentId(commentId);
-  }, []);
+  const handleReplyClick = useCallback(
+    (commentId) => {
+      if (isUserLoggedIn) {
+        setParentCommentId(commentId);
+      }
+    },
+    [isUserLoggedIn]
+  );
 
   const handleCommentSubmit = useCallback(
     (text) => {
@@ -110,8 +114,10 @@ function Article() {
           isUserLoggedIn={isUserLoggedIn}
         />
       ) : (
-        <LinkToLoginPage />
+        null
       )}
+       {!isUserLoggedIn && <LinkToLoginPage />}
+
     </PageLayout>
   );
 }

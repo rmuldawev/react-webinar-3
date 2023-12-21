@@ -22,7 +22,7 @@ export default {
         console.log("jsonStr", jsonStr);
         const res = await services.api.request({
           method: "POST",
-          url: `/api/v1/comments?fields=id,text,dateCreate,author(profile(name)),parent(_id,_type),isDeleted`,
+          url: `/api/v1/comments?fields=id,text,dateCreate,author(profile),parent(_id,_type),isDeleted`,
           body: jsonStr,
         });
 

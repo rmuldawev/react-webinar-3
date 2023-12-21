@@ -4,6 +4,7 @@ import CommentContainer from "../comment-container";
 import CommentForm from "../comment";
 
 const renderComments = (comments, depth = 0, parentCommentId, handleReplyClick, handleCommentSubmit, onCancelReply, isUserLoggedIn) => {
+  console.log('comments',comments)
   return (
     <>
       {comments.map((comment) => (
