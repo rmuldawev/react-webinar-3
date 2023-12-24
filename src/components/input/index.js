@@ -26,6 +26,7 @@ function Input(props) {
 
   const cn = bem('Input');
   return (
+    
     <input
       className={cn({theme: props.theme})}
       value={value}
